@@ -20,6 +20,9 @@ npm.cmd run test:chromium
 
 ## 주요 명령
 
+- `npm.cmd run preflight`: YAML·로컬 접속정보·Chromium·CSV/전체 절차 동기화 사전점검
+- `npm.cmd run check:tc-sync`: CSV TC와 전체 절차의 TC 번호 및 순서 일치 검사
+- `npm.cmd run test:procedure`: 하나의 브라우저 세션에서 전체 TC를 화면 없이 순차 실행
 - `npm test`: 전체 테스트
 - `npm run test:chromium`: Chromium 단일 워커 실행
 - `npm run test:login`: 환경변수로 제공한 계정의 로그인 TC
@@ -31,6 +34,9 @@ npm.cmd run test:chromium
 - `npm.cmd run test:headed`: 하나의 브라우저 세션에서 로그인은 한 번만 하고 전체 TC를 절차대로 이어서 실행하는 UI 화면 시연 전용 명령(실제 등록·수집·반영·저장 작업 수행)
 
 새 TC는 개별 spec과 함께 `tests/procedures/full-quality-procedure.spec.ts`에 TC 번호순 `test.step`으로 추가하여 전체 시연에도 항상 포함합니다.
+CSV와 전체 절차가 다르면 사전점검 단계에서 실행을 차단합니다. 장기 재실행 구조와 버전 정책은 `docs/AUTOMATION_STRUCTURE.md`, 버전 변경 내역은 `CHANGELOG.md`에서 관리합니다.
+
+전체 실행마다 자동화 버전과 Git 커밋을 `logs/test-runs/YYYY-MM-DD/*.json`에 로컬 기록하며 Git에는 올리지 않습니다.
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서
 

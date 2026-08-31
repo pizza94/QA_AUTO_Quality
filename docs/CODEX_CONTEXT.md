@@ -22,6 +22,10 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - All menu-owned controls, grids, tabs, filters, buttons, and detail panels are scoped to their active region; only global navigation and modal dialogs remain page-scoped.
 - Sequential menu navigation must click a visible target submenu directly and expand the parent only when that submenu is hidden, avoiding accidental collapse of an already open menu.
 - Work is recorded by date under `docs/work-log/YYYY-MM-DD.md`.
+- Long-term reproducibility is defined in `docs/AUTOMATION_STRUCTURE.md`; repository files, not conversation memory, are the source of truth.
+- `npm.cmd run preflight` validates YAML, local login data, Chromium, and exact TC order synchronization between the CSV and full procedure before execution.
+- `npm.cmd run test:procedure` runs the full procedure headlessly; `npm.cmd run test:headed` runs the same procedure visibly only on explicit request.
+- Automation uses SemVer from `package.json` and `CHANGELOG.md`; generated run metadata records the version and Git commit under ignored `logs/test-runs/YYYY-MM-DD/`.
 - Automation is modularized per QualityStream menu under `tests/modules/<menu>/` using page, flow, and spec responsibilities.
 - All test assets live under `tests/`: TC definitions and execution history are maintained in `tests/test-cases/qa-test-cases.csv`; every non-code test-data and environment-information file lives under `tests/test-data/`, while loader code stays under `tests/support/`.
 - The initial smoke test is organized under `tests/modules/smoke/` with separate page, flow, and spec files as the reference module layout.

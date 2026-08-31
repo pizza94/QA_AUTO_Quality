@@ -7,8 +7,8 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
-    ? [['html'], ['github'], ['./reporters/failure-log-reporter.ts', { outputDir: 'logs/test-errors' }]]
-    : [['list'], ['html'], ['./reporters/failure-log-reporter.ts', { outputDir: 'logs/test-errors' }]],
+    ? [['html'], ['github'], ['./reporters/failure-log-reporter.ts', { outputDir: 'logs/test-errors' }], ['./reporters/run-metadata-reporter.ts']]
+    : [['list'], ['html'], ['./reporters/failure-log-reporter.ts', { outputDir: 'logs/test-errors' }], ['./reporters/run-metadata-reporter.ts']],
   use: {
     baseURL: process.env.BASE_URL || process.env.PLAYWRIGHT_BASE_URL || 'https://example.com',
     trace: 'retain-on-failure',
@@ -22,4 +22,3 @@ export default defineConfig({
     }
   ]
 });
-

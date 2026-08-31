@@ -6,3 +6,4 @@ test-results/
 !.env.example
 logs/test-errors/*.log
 tests/test-data/*.local.yml
+logs/test-runs/

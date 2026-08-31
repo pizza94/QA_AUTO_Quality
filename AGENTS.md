@@ -3,6 +3,7 @@
 - Communicate primarily in concise Korean and lead with the result.
 - Report work results as natural prose without diff statistics such as `(+1 -0)`, file-by-file change lists, tables, or patch details unless the user explicitly requests them.
 - Read `docs/CODEX_CONTEXT.md` and check Git status before meaningful work.
+- Before changing or running tests, read in order: `docs/CODEX_CONTEXT.md`, `tests/test-cases/qa-test-cases.csv`, relevant `tests/test-data/*.yml`, and `tests/procedures/full-quality-procedure.spec.ts`.
 - Load the login URL and credentials from the Git-ignored local YAML referenced by `tests/test-data/login.yml`. Never commit the populated local YAML or real secrets.
 - Prefer focused Chromium tests during development and expand browser coverage only when requested.
 - Preserve unrelated user changes.
@@ -15,8 +16,11 @@
 - Never directly operate the user's visible browser for test execution or inspection. When a visible demonstration is requested, provide or run an explicit Playwright headed command and keep normal development and verification headless.
 - Use each TC-specific command for isolated headless execution. Launch visible UI only with `npm.cmd run test:headed`; the full procedure must use one browser page and session, log in only in TC-001, and let every later TC continue from the preceding TC without replaying earlier steps.
 - Whenever a TC is added, add its own `test.step` to `tests/procedures/full-quality-procedure.spec.ts` in TC order so `test:headed` always covers the complete procedure.
+- Run `npm.cmd run preflight` before a full procedure. Keep the CSV TC IDs and the full procedure `test.step` IDs in identical order; the synchronization check must pass.
 - QualityStream keeps prior menu DOM and query state. After entering a menu that has a search button, click that menu's scoped search button once to initialize its data, and scope duplicate IDs and filters to the active menu region.
 - Scope every menu-owned control, grid, tab, filter, button, and detail-panel locator to that menu's active region; keep only global navigation and modal dialogs at page scope.
 - In sequential execution, do not toggle an already expanded parent menu. Click the target submenu directly when it is visible; expand its parent only when the submenu is hidden.
 - The user has pre-approved headless immediate execution of the latest `수집테스트자동N` metadata-collection reservation. Do not ask again unless the target, scope, or side effect changes; allow up to five minutes for collection-status verification.
 - Update `docs/CODEX_CONTEXT.md` after meaningful decisions or blockers.
+- Use the `package.json` SemVer as the automation version, document version changes in `CHANGELOG.md`, and use Git commits/tags as the authoritative history. Do not create copied version files.
+- Keep generated run metadata under `logs/test-runs/YYYY-MM-DD/`; do not commit it. Each run must record the automation version and Git commit without secrets.
