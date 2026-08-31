@@ -2,12 +2,15 @@
 
 - Communicate primarily in concise Korean and lead with the result.
 - Report work results as natural prose without diff statistics such as `(+1 -0)`, file-by-file change lists, tables, or patch details unless the user explicitly requests them.
+- Minimize token usage: keep successful command output and final reports concise, inspect only the relevant error section on failure, avoid rereading whole files when targeted search is enough, and batch durable documentation updates by meaningful work unit.
+- Validate a focused TC before running the full procedure. Do not inspect trace, screenshots, full DOM snapshots, or broad logs unless the focused failure cannot be diagnosed from the primary error.
 - Read `docs/CODEX_CONTEXT.md` and check Git status before meaningful work.
 - Before changing or running tests, use `tests/test-context/project-context.yml` as the single authoritative execution context, follow its `readOrder`, and inspect only the relevant test-data and module files for the requested TC.
 - Load the login URL and credentials from the Git-ignored local YAML referenced by `tests/test-data/login.yml`. Never commit the populated local YAML or real secrets.
 - Prefer focused Chromium tests during development and expand browser coverage only when requested.
 - Preserve unrelated user changes.
 - Do not commit or push completed work automatically. Commit only when the user explicitly requests a commit, and push only when the user explicitly requests a push.
+- Keep commit/push verification compact: check the intended changes, sync status, and latest commit without reporting diff statistics or full command output to the user.
 - Keep failure logs under `logs/test-errors/YYYY-MM-DD/` using the Asia/Seoul execution date; include automatic category/cause/action analysis and do not commit generated `.log` files.
 - Record meaningful work in `docs/work-log/YYYY-MM-DD.md` using the Asia/Seoul date.
 - Keep each QualityStream menu under `tests/modules/<menu>/` with separate page, flow, and spec responsibilities.
