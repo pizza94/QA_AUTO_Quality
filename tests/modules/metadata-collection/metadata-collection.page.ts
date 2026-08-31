@@ -161,6 +161,8 @@ export class MetadataCollectionPage {
 
   async save() {
     await this.saveButton.click();
+    await this.registrationDialog.waitFor({ state: 'hidden' });
+    await this.refreshList();
   }
 
   reservationRow(reservationName: string) {
