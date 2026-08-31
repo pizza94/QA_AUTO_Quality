@@ -16,7 +16,8 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Credentials must remain in local environment variables and must not be committed.
 - TC scenarios use a one-way sequential flow: enter the screen, input data, execute the action, verify the result, then advance to the next step without navigating backward.
 - Browser tests run headlessly by default. Show or preserve visible browser UI only when the user explicitly requests a live demonstration; do not generate chat screenshots unless explicitly requested.
-- Visible UI demonstrations must use `npm.cmd run test:headed`, which automatically discovers numbered TC specs and runs every TC sequentially by TC number with real side effects; do not directly operate the user's visible browser for test execution or inspection.
+- Visible UI demonstrations must use `npm.cmd run test:headed`. The full procedure uses one browser page and session, logs in only in TC-001, and runs later TC steps from the preceding state without replaying earlier steps; do not directly operate the user's visible browser for test execution or inspection.
+- Every newly added TC must also be appended as a TC-ordered `test.step` in `tests/procedures/full-quality-procedure.spec.ts`, keeping `test:headed` complete while preserving the single-session procedure.
 - Work is recorded by date under `docs/work-log/YYYY-MM-DD.md`.
 - Automation is modularized per QualityStream menu under `tests/modules/<menu>/` using page, flow, and spec responsibilities.
 - All test assets live under `tests/`: TC definitions and execution history are maintained in `tests/test-cases/qa-test-cases.csv`; every non-code test-data and environment-information file lives under `tests/test-data/`, while loader code stays under `tests/support/`.

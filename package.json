@@ -11,7 +11,7 @@
     "test:collection-now": "playwright test tests/modules/metadata-collection/metadata-collection-immediate.spec.ts --project=chromium --workers=1",
     "test:verification-target": "playwright test tests/modules/verification-target/verification-target.spec.ts --project=chromium --workers=1",
     "test:profiling-settings": "playwright test tests/modules/profiling-settings/profiling-settings.spec.ts --project=chromium --workers=1",
-    "test:headed": "node scripts/run-all-tcs.cjs",
+    "test:headed": "playwright test tests/procedures/full-quality-procedure.spec.ts --project=chromium --workers=1 --headed",
     "test:ui": "playwright test --ui",
     "test:list": "playwright test --list",
     "typecheck": "tsc --noEmit",
