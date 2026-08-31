@@ -65,7 +65,9 @@ export class ProfilingSettingsPage {
   }
 
   async open() {
-    await this.profilingSettingsMenu.click();
+    if (!(await this.tableLink.isVisible())) {
+      await this.profilingSettingsMenu.click();
+    }
     await this.tableLink.click();
     await this.tableTab.waitFor({ state: 'visible' });
     await this.searchButton.click();

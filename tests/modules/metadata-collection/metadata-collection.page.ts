@@ -99,7 +99,9 @@ export class MetadataCollectionPage {
   }
 
   async open() {
-    await this.targetManagementMenu.click();
+    if (!(await this.metadataCollectionLink.isVisible())) {
+      await this.targetManagementMenu.click();
+    }
     await this.metadataCollectionLink.click();
     await this.metadataCollectionTab.waitFor({ state: 'visible' });
     await this.searchButton.click();

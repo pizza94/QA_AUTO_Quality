@@ -62,7 +62,9 @@ export class VerificationTargetPage {
   }
 
   async open() {
-    await this.targetManagementMenu.click();
+    if (!(await this.verificationTargetLink.isVisible())) {
+      await this.targetManagementMenu.click();
+    }
     await this.verificationTargetLink.click();
     await this.verificationTargetTab.waitFor({ state: 'visible' });
     await this.searchButton.click();
