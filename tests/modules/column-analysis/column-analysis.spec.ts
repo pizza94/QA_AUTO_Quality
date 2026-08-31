@@ -4,12 +4,15 @@ import { loadTestData } from '../../support/test-data';
 import { openQualityManagement } from '../quality-management/quality-management.flow';
 import { ProfilingSettingsPage, type ProfilingSettingsInput } from '../profiling-settings/profiling-settings.page';
 import { verifyConfiguredColumnsInAnalysis } from './column-analysis.flow';
-import type { ColumnAnalysisInput } from './column-analysis.page';
+import type { ColumnAnalysisInput, ColumnExecutionInput } from './column-analysis.page';
 
 test('TC-007 TC-006 설정 컬럼을 컬럼분석에서 확인하고 실행한다', async ({ page }) => {
   const loginData = await loadTestData<{ credentials: LoginEnvironmentReferences }>('login.yml');
   const profilingData = await loadTestData<{ input: ProfilingSettingsInput }>('profiling-settings.yml');
-  const analysisData = await loadTestData<{ input: ColumnAnalysisInput }>('column-analysis.yml');
+  const analysisData = await loadTestData<{
+    input: ColumnAnalysisInput;
+    execution: ColumnExecutionInput;
+  }>('column-analysis.yml');
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');
 
   await openQualityManagement(page, loginData.credentials);
@@ -20,7 +23,7 @@ test('TC-007 TC-006 설정 컬럼을 컬럼분석에서 확인하고 실행한�
   await profilingPage.selectTarget(target);
   const checkedColumns = await profilingPage.configuredColumns();
   const { results } = await verifyConfiguredColumnsInAnalysis(
-    page, analysisData.input, target, checkedColumns
+    page, analysisData.input, target, checkedColumns, analysisData.execution
   );
 
   expect(results).toHaveLength(checkedColumns.length);

@@ -71,6 +71,8 @@ invariants:
 
   - TC-007 searches N first and falls back to Y for the same TC-006 column IDs when a rerun has no unexecuted rows.
 
+  - TC-007 and TC-008 refresh column analysis through the scoped search button every 10 seconds and require every executed TC-006 column ID to have a new execution timestamp and completed job status.
+
 versionPolicy:
   source: package.json
   history: CHANGELOG.md, Git 커밋 및 vX.Y.Z 검증 태그

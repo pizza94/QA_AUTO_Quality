@@ -23,6 +23,7 @@ import {
 } from '../modules/column-analysis/column-analysis.flow';
 import type {
   ColumnAnalysisInput,
+  ColumnExecutionInput,
   MappingRuleInput
 } from '../modules/column-analysis/column-analysis.page';
 import { registerProfilingInspectionWork } from '../modules/inspection-work/inspection-work.flow';
@@ -57,13 +58,18 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
   const columnAnalysisData = await loadTestData<{
     input: ColumnAnalysisInput;
     mappingRule: MappingRuleInput;
+    execution: ColumnExecutionInput;
   }>('column-analysis.yml');
   const inspectionWorkData = await loadTestData<{ input: InspectionWorkInput }>(
     'inspection-work.yml'
   );
 
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');
-  test.setTimeout(collectionData.immediateExecution.completionTimeoutMs + 180000);
+  test.setTimeout(
+    collectionData.immediateExecution.completionTimeoutMs
+    + (columnAnalysisData.execution.completionTimeoutMs * 2)
+    + 180000
+  );
 
   await test.step('TC-001 로그인', async () => {
     const loginPage = await login(page, loginData.credentials);
@@ -153,7 +159,11 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
       throw new Error('TC-006 프로파일링 대상 또는 컬럼 정보가 없습니다.');
     }
     const { results } = await verifyConfiguredColumnsInAnalysis(
-      page, columnAnalysisData.input, profilingTarget, profilingColumns
+      page,
+      columnAnalysisData.input,
+      profilingTarget,
+      profilingColumns,
+      columnAnalysisData.execution
     );
     expect(results).toHaveLength(profilingColumns.length);
   });
@@ -167,7 +177,8 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
       columnAnalysisData.input,
       columnAnalysisData.mappingRule,
       profilingTarget,
-      profilingColumns
+      profilingColumns,
+      columnAnalysisData.execution
     );
     expect(applied).toHaveLength(profilingColumns.length);
   });

@@ -9,3 +9,8 @@ input:
 mappingRule:
   executionHistory: 'Y'
   fallbackRule: 숫자완성 테스트
+execution:
+  executionHistory: 'Y'
+  completedStatus: 완료
+  completionTimeoutMs: 300000
+  uiPollIntervalMs: 10000

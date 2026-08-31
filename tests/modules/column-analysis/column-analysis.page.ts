@@ -23,6 +23,13 @@ export type MappingRuleInput = {
   fallbackRule: string;
 };
 
+export type ColumnExecutionInput = {
+  executionHistory: string;
+  completedStatus: string;
+  completionTimeoutMs: number;
+  uiPollIntervalMs: number;
+};
+
 type ColumnAnalysisResult = ProfilingColumnTarget & {
   executedAt: string;
   jobStatus: string;
@@ -77,7 +84,11 @@ export class ColumnAnalysisPage {
     await this.searchButton.click();
   }
 
-  async search(input: ColumnAnalysisInput, target: ProfilingTarget) {
+  async search(
+    input: ColumnAnalysisInput,
+    target: ProfilingTarget,
+    allowNoTargetResults = false
+  ) {
     await this.region.locator('select[name="table.sys"]').selectOption({ label: input.system });
     await this.region.locator('select[name="table.biz"]').selectOption({ label: input.business });
     await this.region.locator('input[name="table.tableName"]').fill(target.tableId);
@@ -97,11 +108,14 @@ export class ColumnAnalysisPage {
     await this.region.locator('input[name="table.owner"]').fill(input.owner);
     await this.searchButton.click();
     await expect.poll(async () => {
-      if (await this.region.locator('#blankMsg_columnAnalysisColumnsGrid').isVisible()) {
+      if (
+        await this.region.locator('#blankMsg_columnAnalysisColumnsGrid').isVisible()
+        || await this.region.getByText('표시할 행이 없습니다', { exact: true }).isVisible()
+      ) {
         return 'empty';
       }
       const targetRows = (await this.results()).filter((result) => result.tableId === target.tableId);
-      if (!targetRows.length) return 'loading';
+      if (!targetRows.length) return allowNoTargetResults ? 'empty' : 'loading';
       if (input.executionHistory === 'N') {
         return targetRows.every((result) => result.executedAt === '' && result.jobStatus === '')
           ? 'ready'
@@ -208,6 +222,13 @@ export class ColumnAnalysisPage {
   }
 
   async selectColumns(columnIds: string[]) {
+    const viewport = this.region.locator(
+      '#columnAnalysisColumnsGrid .slick-viewport-top.slick-viewport-left'
+    );
+    await viewport.evaluate((node) => {
+      node.scrollLeft = 0;
+      node.dispatchEvent(new Event('scroll'));
+    });
     for (const columnId of columnIds) {
       const checkbox = this.rowByColumnId(columnId).getByRole('checkbox');
       await checkbox.waitFor({ state: 'visible' });
@@ -233,5 +254,55 @@ export class ColumnAnalysisPage {
     } finally {
       this.page.off('dialog', acceptDialog);
     }
+  }
+
+  async waitForExecutionComplete(
+    searchInput: ColumnAnalysisInput,
+    executionInput: ColumnExecutionInput,
+    target: ProfilingTarget,
+    columnIds: string[],
+    executionStartedAt: Date
+  ) {
+    const formatter = new Intl.DateTimeFormat('sv-SE', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+    const startedAtText = formatter.format(executionStartedAt);
+    const startedAt = Date.now();
+    let lastStatuses: Array<{ columnId: string; executedAt: string; jobStatus: string }> = [];
+
+    while (Date.now() - startedAt < executionInput.completionTimeoutMs) {
+      await this.page.waitForTimeout(executionInput.uiPollIntervalMs);
+      await this.search(
+        { ...searchInput, executionHistory: executionInput.executionHistory },
+        target,
+        true
+      );
+      lastStatuses = (await this.results())
+        .filter((result) => result.tableId === target.tableId && columnIds.includes(result.columnId))
+        .map(({ columnId, executedAt, jobStatus }) => ({ columnId, executedAt, jobStatus }));
+      const latestByColumn = new Map<string, (typeof lastStatuses)[number]>();
+      for (const status of lastStatuses) {
+        const current = latestByColumn.get(status.columnId);
+        if (!current || status.executedAt > current.executedAt) latestByColumn.set(status.columnId, status);
+      }
+      const completed = columnIds.every((columnId) => {
+        const status = latestByColumn.get(columnId);
+        return status
+          && status.jobStatus === executionInput.completedStatus
+          && status.executedAt >= startedAtText;
+      });
+      if (completed) return [...latestByColumn.values()];
+    }
+
+    throw new Error(
+      `컬럼분석 작업상태가 제한시간 안에 완료되지 않았습니다: ${target.tableId} ${JSON.stringify(lastStatuses)}`
+    );
   }
 }

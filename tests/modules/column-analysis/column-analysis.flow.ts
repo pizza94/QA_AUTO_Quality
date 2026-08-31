@@ -5,6 +5,7 @@ import type {
 } from '../profiling-settings/profiling-settings.page';
 import {
   ColumnAnalysisPage,
+  type ColumnExecutionInput,
   type ColumnAnalysisInput,
   type MappingRuleInput
 } from './column-analysis.page';
@@ -13,7 +14,8 @@ export async function verifyConfiguredColumnsInAnalysis(
   page: Page,
   input: ColumnAnalysisInput,
   target: ProfilingTarget,
-  expectedColumns: ProfilingColumnTarget[]
+  expectedColumns: ProfilingColumnTarget[],
+  executionInput: ColumnExecutionInput
 ) {
   const columnAnalysisPage = new ColumnAnalysisPage(page);
   await columnAnalysisPage.open();
@@ -48,13 +50,22 @@ export async function verifyConfiguredColumnsInAnalysis(
   }
 
   await columnAnalysisPage.selectColumns(expectedIds);
+  const executionStartedAt = new Date();
   const executionMessage = await columnAnalysisPage.runSelectedColumns();
+  const completedResults = await columnAnalysisPage.waitForExecutionComplete(
+    input,
+    executionInput,
+    target,
+    expectedIds,
+    executionStartedAt
+  );
 
   return {
     columnAnalysisPage,
     results: targetResults,
     executionMessage,
-    effectiveExecutionHistory
+    effectiveExecutionHistory,
+    completedResults
   };
 }
 
@@ -63,7 +74,8 @@ export async function applyMappingRulesAndRerun(
   input: ColumnAnalysisInput,
   mappingInput: MappingRuleInput,
   target: ProfilingTarget,
-  expectedColumns: ProfilingColumnTarget[]
+  expectedColumns: ProfilingColumnTarget[],
+  executionInput: ColumnExecutionInput
 ) {
   const columnAnalysisPage = new ColumnAnalysisPage(page);
   await columnAnalysisPage.search(
@@ -79,7 +91,6 @@ export async function applyMappingRulesAndRerun(
     throw new Error(`TC-008 컬럼ID 불일치. expected=${expectedIds.join(',')} actual=${actualIds.join(',')}`);
   }
 
-  await columnAnalysisPage.selectColumns(expectedIds);
   const applied = await columnAnalysisPage.applyMappingRules(
     results,
     expectedIds,
@@ -88,6 +99,19 @@ export async function applyMappingRulesAndRerun(
   if (applied.some(({ message }) => !/매핑룰.*변경/.test(message))) {
     throw new Error(`매핑룰 변경 확인 메시지가 올바르지 않습니다: ${JSON.stringify(applied)}`);
   }
+  await columnAnalysisPage.search(
+    { ...input, executionHistory: executionInput.executionHistory },
+    target
+  );
+  await columnAnalysisPage.selectColumns(expectedIds);
+  const executionStartedAt = new Date();
   const executionMessage = await columnAnalysisPage.runSelectedColumns();
-  return { results, applied, executionMessage };
+  const completedResults = await columnAnalysisPage.waitForExecutionComplete(
+    input,
+    executionInput,
+    target,
+    expectedIds,
+    executionStartedAt
+  );
+  return { results, applied, executionMessage, completedResults };
 }

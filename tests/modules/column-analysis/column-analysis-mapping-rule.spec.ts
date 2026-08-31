@@ -7,6 +7,7 @@ import { applyMappingRulesAndRerun } from './column-analysis.flow';
 import {
   ColumnAnalysisPage,
   type ColumnAnalysisInput,
+  type ColumnExecutionInput,
   type MappingRuleInput
 } from './column-analysis.page';
 
@@ -16,6 +17,7 @@ test('TC-008 실행 컬럼에 매핑룰을 적용하고 다시 실행한다', as
   const analysisData = await loadTestData<{
     input: ColumnAnalysisInput;
     mappingRule: MappingRuleInput;
+    execution: ColumnExecutionInput;
   }>('column-analysis.yml');
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');
 
@@ -34,7 +36,8 @@ test('TC-008 실행 컬럼에 매핑룰을 적용하고 다시 실행한다', as
     analysisData.input,
     analysisData.mappingRule,
     target,
-    checkedColumns
+    checkedColumns,
+    analysisData.execution
   );
   expect(applied).toHaveLength(checkedColumns.length);
 });
