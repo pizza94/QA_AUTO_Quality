@@ -28,8 +28,7 @@ npm.cmd run test:chromium
 - `npm run test:collection-now`: 최신 증가형 수집 예약 즉시실행 TC
 - `npm run test:verification-target`: 미반영 검증대상 상위 1건 업무 반영 TC
 - `npm.cmd run test:profiling-settings`: TC-006 기본 실행(화면 없는 헤드리스)
-- `npm.cmd run test:profiling-settings:headed`: TC-006 UI 화면 시연 전용 명령(동일한 실제 저장 작업 수행)
-- `npm run test:headed`: 브라우저가 보이는 상태로 실행
+- `npm.cmd run test:headed`: TC-001부터 TC-006까지 순서대로 실행하는 UI 화면 시연 전용 명령(실제 등록·수집·반영·저장 작업 수행)
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서
 
