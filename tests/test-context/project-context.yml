@@ -36,6 +36,8 @@ restartProcedure:
   - 사용자가 명시한 경우에만 npm.cmd run test:headed로 화면을 표시한다.
   - 결과에 따라 이 파일의 currentState와 날짜별 작업일지를 갱신한다.
 
+handoffPrompt: tests/test-context/project-context.yml을 기준으로 프로젝트 상태를 복원하고, preflight 후 현재 등록된 전체 TC를 test:procedure로 백그라운드 실행해. 실패하면 날짜별 로그를 분석하고 결과만 알려줘. UI는 띄우지 마.
+
 invariants:
   - 전체 절차는 하나의 브라우저 페이지와 세션을 사용한다.
   - 로그인은 TC-001에서 한 번만 수행한다.
