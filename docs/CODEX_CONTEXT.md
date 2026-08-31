@@ -24,6 +24,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Local `main` tracks `origin/main`; the organized project scaffold has been pushed successfully.
 - The first business flow is login (`TC-LOGIN-001`) under `tests/modules/login/`; credentials are read only from runtime environment variables.
 - Live login was verified successfully: the login form disappears, the URL leaves the login route, and the Data Portal welcome heading becomes visible.
+- Git workflow: create local commits for completed work, and batch-push only on an explicit user request.
 
 ## Next action
 
