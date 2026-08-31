@@ -26,18 +26,20 @@ npm.cmd run test:chromium
 - `npm run test:quality`: 로그인 후 QualityStream 진입 TC
 - `npm run test:collection`: 증가형 예약명으로 메타데이터 수집 예약 등록 TC
 - `npm run test:collection-now`: 최신 증가형 수집 예약 즉시실행 TC
+- `npm run test:verification-target`: 미반영 검증대상 상위 2건 업무 반영 TC
 - `npm run test:headed`: 브라우저가 보이는 상태로 실행
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서
 
-실패 로그는 `logs/test-errors/*.log`에 생성됩니다.
+실패 로그는 `logs/test-errors/YYYY-MM-DD/*.log`에 실행일(Asia/Seoul)별로 생성되며,
+각 로그에 오류 유형·추정 원인·권장 조치가 자동 기록됩니다.
 
 ## 프로젝트 구조
 
 ```text
 QA_AUTO_Quality/
 ├─ docs/                         # 프로젝트 인수인계와 날짜별 작업일지
-├─ logs/test-errors/             # 실패 테스트 전용 로그(생성 로그는 Git 제외)
+├─ logs/test-errors/YYYY-MM-DD/  # 날짜별 실패 로그(생성 로그는 Git 제외)
 ├─ reporters/                    # Playwright 커스텀 리포터
 ├─ tests/
 │  ├─ modules/<menu>/            # 메뉴별 Page / Flow / Spec

@@ -11,7 +11,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 ## Current state
 
 - Initial Chromium Playwright scaffold created.
-- Failed tests write dedicated logs to `logs/test-errors/*.log`.
+- Failed tests write dedicated logs to `logs/test-errors/YYYY-MM-DD/*.log` using the Asia/Seoul execution date; each log includes deterministic failure category, likely cause, and recommended action analysis.
 - Browser console warnings/errors and uncaught page errors are attached to failed-test logs.
 - Credentials must remain in local environment variables and must not be committed.
 - TC scenarios use a one-way sequential flow: enter the screen, input data, execute the action, verify the result, then advance to the next step without navigating backward.
@@ -35,7 +35,9 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - `TC-004` selects the highest-numbered existing `수집테스트자동N` reservation, records its history count, triggers immediate execution, and verifies both final list status and the newly added collection-history row as `완료`.
 - `TC-004` passed headless Chromium in 24.3 seconds. It accepts either an observed `수집중` state or a newly added completed history row as execution evidence because a fast job or delayed list refresh can make the transient state unobservable.
 - The user pre-approved repeated headless TC-004 execution without reconfirmation; status verification may wait up to five minutes because duration varies with data volume.
+- `TC-005` filters unreflected DBCatalog 신규 rows for ORA19C/META42_DEV with blank system/business values, selects the visually top two rows by grid position, and reflects them to 큐에이/QA상품.
+- `TC-005` passed headless Chromium and verified BAZ06B and BILLING_BASIC_INFO as reflected (`Y`) with the assigned system and business values.
 
 ## Next action
 
-- Define the next metadata-collection or QualityStream test case.
+- Define the next QualityStream test case.

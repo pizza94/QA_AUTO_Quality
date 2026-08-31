@@ -1,0 +1,11 @@
+input:
+  collectionTargetOption: DB카탈로그
+  collectionTargetGridValue: DBCatalog
+  reflectedYn: 'N'
+  changeType: 신규
+  database: ORA19C
+  owner: META42_DEV
+  selectionCount: 2
+  system: 큐에이
+  business: QA상품
+  expectedReflectedYn: 'Y'
