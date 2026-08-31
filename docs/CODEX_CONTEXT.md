@@ -18,6 +18,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Browser tests run headlessly by default. Show or preserve visible browser UI only when the user explicitly requests a live demonstration; do not generate chat screenshots unless explicitly requested.
 - Visible UI demonstrations must use `npm.cmd run test:headed`. The full procedure uses one browser page and session, logs in only in TC-001, and runs later TC steps from the preceding state without replaying earlier steps; do not directly operate the user's visible browser for test execution or inspection.
 - Every newly added TC must also be appended as a TC-ordered `test.step` in `tests/procedures/full-quality-procedure.spec.ts`, keeping `test:headed` complete while preserving the single-session procedure.
+- QualityStream retains prior menu DOM and query state. Menu flows must click the active menu's scoped search button once after entry and scope duplicate IDs and filters to that menu region.
 - Work is recorded by date under `docs/work-log/YYYY-MM-DD.md`.
 - Automation is modularized per QualityStream menu under `tests/modules/<menu>/` using page, flow, and spec responsibilities.
 - All test assets live under `tests/`: TC definitions and execution history are maintained in `tests/test-cases/qa-test-cases.csv`; every non-code test-data and environment-information file lives under `tests/test-data/`, while loader code stays under `tests/support/`.

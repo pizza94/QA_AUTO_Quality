@@ -25,6 +25,10 @@ function escapeRegExp(value: string) {
 export class VerificationTargetPage {
   constructor(private readonly page: Page) {}
 
+  get region() {
+    return this.page.locator('#dataModelRegion');
+  }
+
   get targetManagementMenu() {
     return this.page.locator('a.menu-item').filter({ hasText: '검증대상관리' });
   }
@@ -38,11 +42,11 @@ export class VerificationTargetPage {
   }
 
   get additionalFilterButton() {
-    return this.page.getByRole('button', { name: '추가필터 표시', exact: true });
+    return this.region.getByRole('button', { name: '추가필터 표시', exact: true });
   }
 
   get searchButton() {
-    return this.page.locator('#dataModelRegion .search-panel-search-btn');
+    return this.region.locator('.search-panel-search-btn');
   }
 
   get rows() {
@@ -61,6 +65,7 @@ export class VerificationTargetPage {
     await this.targetManagementMenu.click();
     await this.verificationTargetLink.click();
     await this.verificationTargetTab.waitFor({ state: 'visible' });
+    await this.searchButton.click();
   }
 
   async search(input: VerificationTargetInput) {
@@ -68,11 +73,11 @@ export class VerificationTargetPage {
       await this.additionalFilterButton.click();
     }
 
-    await this.page.locator('#metaCltnTrgt').selectOption({ label: input.collectionTargetOption });
-    await this.page.locator('#rflcYn').selectOption({ label: input.reflectedYn });
-    await this.page.locator('#statusSelect').selectOption({ label: input.changeType });
-    await this.page.locator('#dbNm').fill(input.database);
-    await this.page.locator('#usr').fill(input.owner);
+    await this.region.locator('#metaCltnTrgt').selectOption({ label: input.collectionTargetOption });
+    await this.region.locator('#rflcYn').selectOption({ label: input.reflectedYn });
+    await this.region.locator('#statusSelect').selectOption({ label: input.changeType });
+    await this.region.locator('#dbNm').fill(input.database);
+    await this.region.locator('#usr').fill(input.owner);
     await this.searchButton.click();
     await this.rows.first().waitFor({ state: 'visible' });
   }
@@ -151,7 +156,7 @@ export class VerificationTargetPage {
   }
 
   async verifyReflected(candidates: Candidate[], input: VerificationTargetInput) {
-    await this.page.locator('#rflcYn').selectOption({ label: '전체' });
+    await this.region.locator('#rflcYn').selectOption({ label: '전체' });
     await this.searchButton.click();
 
     for (const candidate of candidates) {

@@ -24,6 +24,10 @@ function escapeRegExp(value: string) {
 export class ProfilingSettingsPage {
   constructor(private readonly page: Page) {}
 
+  get region() {
+    return this.page.locator('#tableMainRegion');
+  }
+
   get profilingSettingsMenu() {
     return this.page.locator('a.menu-item').filter({ hasText: '프로파일링설정' });
   }
@@ -37,7 +41,7 @@ export class ProfilingSettingsPage {
   }
 
   get searchButton() {
-    return this.page.locator('#tableMainRegion .search-panel-search-btn');
+    return this.region.locator('.search-panel-search-btn');
   }
 
   get rows() {
@@ -64,13 +68,14 @@ export class ProfilingSettingsPage {
     await this.profilingSettingsMenu.click();
     await this.tableLink.click();
     await this.tableTab.waitFor({ state: 'visible' });
+    await this.searchButton.click();
   }
 
   async search(input: ProfilingSettingsInput) {
-    await this.page.locator('#systemSelect').selectOption({ label: input.system });
-    await this.page.locator('#bizSelect').selectOption({ label: input.business });
+    await this.region.locator('#systemSelect').selectOption({ label: input.system });
+    await this.region.locator('#bizSelect').selectOption({ label: input.business });
 
-    const additionalFilterButton = this.page.getByRole('button', {
+    const additionalFilterButton = this.region.getByRole('button', {
       name: '추가필터 표시',
       exact: true
     });
@@ -78,10 +83,10 @@ export class ProfilingSettingsPage {
       await additionalFilterButton.click();
     }
 
-    await this.page.locator('#metaCltnTrgt').selectOption({ label: input.collectionTargetOption });
-    await this.page.locator('#dbNm').fill(input.database);
-    await this.page.locator('input[name="owner"]').fill(input.owner);
-    await this.page.locator('#tableExeYN').selectOption({ label: input.currentExecutionStatus });
+    await this.region.locator('#metaCltnTrgt').selectOption({ label: input.collectionTargetOption });
+    await this.region.locator('#dbNm').fill(input.database);
+    await this.region.locator('input[name="owner"]').fill(input.owner);
+    await this.region.locator('#tableExeYN').selectOption({ label: input.currentExecutionStatus });
     await this.searchButton.click();
     await this.rows.first().waitFor({ state: 'visible' });
   }
@@ -172,7 +177,7 @@ export class ProfilingSettingsPage {
   }
 
   async reselectTarget(target: ProfilingTarget) {
-    await this.page.locator('#tableExeYN').selectOption({ label: '전체' });
+    await this.region.locator('#tableExeYN').selectOption({ label: '전체' });
     await this.searchButton.click();
     const checkbox = this.rowByTableId(target.tableId).getByRole('checkbox');
     await checkbox.waitFor({ state: 'visible' });
