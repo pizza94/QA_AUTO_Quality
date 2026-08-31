@@ -24,13 +24,15 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Local `main` tracks `origin/main`; the organized project scaffold has been pushed successfully.
 - The first business flow is login (`TC-001`) under `tests/modules/login/`; credentials are read only from runtime environment variables.
 - Live login was verified successfully: the login form disappears, the URL leaves the login route, and the Data Portal welcome heading becomes visible.
-- Git workflow: create local commits for completed work, and batch-push only on an explicit user request.
+- Git workflow: leave completed changes uncommitted by default; commit only on an explicit user request and push only on an explicit push request.
+- The Data Portal renders both a hidden side link and a visible card label for quality management; automation selects the visible exact-text card.
 - YAML credential fields contain environment-variable references, never plaintext secrets.
 - The environment template is `tests/test-data/.env.example`; it contains placeholders only.
 - `TC-001` is documented in the master CSV and loads `tests/test-data/login.yml` for automation values.
 - `TC-002` logs in, clicks the Data Portal quality-management card, and verifies the QualityStream 4.3 dashboard and primary menus using `tests/test-data/quality-management.yml`.
 - `TC-003` opens Verification Target Management > Metadata Collection Management and creates a DB catalog collection reservation using `tests/test-data/metadata-collection.yml`; reservation names increment from the highest existing `수집테스트자동N` suffix.
+- `TC-003` passed headless Chromium and created the reservation successfully. Select-dependent form changes reset the reservation-name field, so automation fills the generated name last.
 
 ## Next action
 
-- Execute and verify the live save step for `TC-003` after receiving action-time confirmation.
+- Identify the next metadata-collection or QualityStream business TC.

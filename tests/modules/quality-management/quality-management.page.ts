@@ -4,7 +4,7 @@ export class QualityManagementPage {
   constructor(private readonly page: Page) {}
 
   get qualityCard() {
-    return this.page.locator('a.side.link.item.QUALITY');
+    return this.page.getByText('품질관리', { exact: true }).filter({ visible: true });
   }
 
   get dashboardTab() {
@@ -12,8 +12,7 @@ export class QualityManagementPage {
   }
 
   menuLink(name: string) {
-    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    return this.page.getByRole('link', { name: new RegExp(`${escapedName}$`) });
+    return this.page.getByText(name, { exact: true }).filter({ visible: true });
   }
 
   async openFromPortal() {

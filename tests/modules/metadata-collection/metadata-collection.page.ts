@@ -97,7 +97,6 @@ export class MetadataCollectionPage {
   }
 
   async fillRegistration(reservationName: string, input: MetadataCollectionInput) {
-    await this.reservationNameInput.fill(reservationName);
     await this.collectionTargetSelect.selectOption({ label: input.collectionTarget });
     await this.databaseSelect.selectOption({ label: input.database });
     await this.cycleTypeSelect.selectOption({ label: input.cycleType });
@@ -105,6 +104,7 @@ export class MetadataCollectionPage {
     await this.timeTypeSelect.selectOption({ label: input.timeType });
     await this.hourSelect.selectOption({ label: input.hour });
     await this.minuteSelect.selectOption({ label: input.minute });
+    await this.reservationNameInput.fill(reservationName);
   }
 
   async save() {
