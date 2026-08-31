@@ -132,7 +132,7 @@ export class ProfilingSettingsPage {
   }
 
   rowByTableId(tableId: string) {
-    const idCell = this.region.locator('.slick-cell.l9.r9').filter({
+    const idCell = this.page.locator('.slick-cell.l9.r9').filter({
       hasText: new RegExp(`^${escapeRegExp(tableId)}$`)
     });
     return this.region.locator('#tableProfilingGrid .slick-row').filter({ has: idCell });

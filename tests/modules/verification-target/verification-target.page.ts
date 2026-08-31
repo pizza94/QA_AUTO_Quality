@@ -123,7 +123,7 @@ export class VerificationTargetPage {
   }
 
   rowByTableId(tableId: string) {
-    const idCell = this.region.locator('.slick-cell.l11.r11').filter({
+    const idCell = this.page.locator('.slick-cell.l11.r11').filter({
       hasText: new RegExp(`^${escapeRegExp(tableId)}$`)
     });
     return this.region.locator('#vrfcTrgtMngtGrid .slick-row').filter({ has: idCell });

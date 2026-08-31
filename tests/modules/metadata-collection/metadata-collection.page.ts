@@ -167,7 +167,7 @@ export class MetadataCollectionPage {
 
   reservationRow(reservationName: string) {
     const exactName = new RegExp(`^${escapeRegExp(reservationName)}$`);
-    const nameCell = this.region.locator('.slick-cell.l3.r3').filter({ hasText: exactName });
+    const nameCell = this.page.locator('.slick-cell.l3.r3').filter({ hasText: exactName });
     return this.region.locator('#metaDataGrid .slick-row').filter({ has: nameCell });
   }
 

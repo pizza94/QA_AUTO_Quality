@@ -19,6 +19,7 @@
 - Run `npm.cmd run preflight` before a full procedure. Keep the CSV TC IDs and the full procedure `test.step` IDs in identical order; the synchronization check must pass.
 - QualityStream keeps prior menu DOM and query state. After entering a menu that has a search button, click that menu's scoped search button once to initialize its data, and scope duplicate IDs and filters to the active menu region.
 - Scope menu content controls, grids, filters, buttons, and detail panels to the nearest stable active-menu container. Do not force navigation tabs into a content region when the product renders them in a shared tab container; select the visible active tab at page scope. Keep global navigation and modal dialogs at page scope.
+- When filtering a scoped grid row with `locator.filter({ has })`, make the inner cell locator relative to the row and do not prefix the active menu region again.
 - Every list menu must click its scoped search button after entry before waiting for rows. Keep finite action and navigation timeouts so a wrong locator fails promptly instead of waiting for the full procedure timeout.
 - After saving a list item, click that menu's scoped search button again before verifying the saved row. For metadata collection execution, use the newly added collection-history row and its completed status as the authoritative completion evidence together with the list status.
 - In sequential execution, do not toggle an already expanded parent menu. Click the target submenu directly when it is visible; expand its parent only when the submenu is hidden.
