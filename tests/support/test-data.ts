@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { parse as parseYaml } from 'yaml';
 
 const dataRoot = path.resolve(process.cwd(), 'test-data');
 
@@ -11,5 +12,16 @@ export async function loadTestData<T>(menu: string, filename: string): Promise<T
     throw new Error(`Invalid test data path: ${menu}/${filename}`);
   }
 
-  return JSON.parse(await readFile(filePath, 'utf8')) as T;
+  const content = await readFile(filePath, 'utf8');
+  const extension = path.extname(filePath).toLowerCase();
+
+  if (extension === '.yml' || extension === '.yaml') {
+    return parseYaml(content) as T;
+  }
+
+  if (extension === '.json') {
+    return JSON.parse(content) as T;
+  }
+
+  throw new Error(`Unsupported test data format: ${extension}`);
 }

@@ -36,7 +36,7 @@ QA_AUTO_Quality/
 ├─ docs/                         # 프로젝트 인수인계와 날짜별 작업일지
 ├─ logs/test-errors/             # 실패 테스트 전용 로그(생성 로그는 Git 제외)
 ├─ reporters/                    # Playwright 커스텀 리포터
-├─ test-data/<menu>/             # 메뉴별 TC 입력값과 기대값
+├─ test-data/<menu>/             # 메뉴별 YAML TC 입력값과 기대값
 ├─ tests/
 │  ├─ modules/<menu>/            # 메뉴별 Page / Flow / Spec
 │  ├─ support/                   # 공통 데이터 로더와 유틸리티
@@ -47,7 +47,7 @@ QA_AUTO_Quality/
 
 새 메뉴는 `tests/modules/<menu>/`에 `<menu>.page.ts`, `<menu>.flow.ts`,
 `<menu>.spec.ts`를 한 묶음으로 추가합니다. 비민감 TC 데이터는 동일한 메뉴명으로
-`test-data/<menu>/`에 저장합니다.
+`test-data/<menu>/*.yml`에 저장합니다.
 
 로그인 TC 실행 전에는 `PLAYWRIGHT_LOGIN_URL`, `PLAYWRIGHT_USERNAME`,
 `PLAYWRIGHT_PASSWORD`를 현재 터미널 세션의 환경변수로 설정합니다. 실제 URL과

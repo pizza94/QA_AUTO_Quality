@@ -1,9 +1,9 @@
 import type { Page } from '@playwright/test';
-import { getLoginEnvironment } from '../../support/environment';
+import { getLoginEnvironment, type LoginEnvironmentReferences } from '../../support/environment';
 import { LoginPage } from './login.page';
 
-export async function login(page: Page) {
-  const { loginUrl, username, password } = getLoginEnvironment();
+export async function login(page: Page, references: LoginEnvironmentReferences) {
+  const { loginUrl, username, password } = getLoginEnvironment(references);
   const loginPage = new LoginPage(page);
 
   await loginPage.open(loginUrl);

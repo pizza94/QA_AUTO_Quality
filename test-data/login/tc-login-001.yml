@@ -1,0 +1,9 @@
+id: TC-LOGIN-001
+description: 유효한 계정으로 Data Portal에 로그인한다.
+credentials:
+  loginUrlEnv: PLAYWRIGHT_LOGIN_URL
+  usernameEnv: PLAYWRIGHT_USERNAME
+  passwordEnv: PLAYWRIGHT_PASSWORD
+expected:
+  landingHeading: Welcome to Data Portal
+  urlMustNotContain: /login

@@ -1,25 +1,31 @@
-function readEnvironment(name: string) {
-  const value = process.env[name]?.trim();
+export type LoginEnvironmentReferences = {
+  loginUrlEnv: string;
+  usernameEnv: string;
+  passwordEnv: string;
+};
 
-  if (!value) {
+function readEnvironment(name: string) {
+  const value = process.env[name];
+
+  if (!value?.trim()) {
     throw new Error(`Required environment variable is missing: ${name}`);
   }
 
   return value;
 }
 
-export function hasLoginEnvironment() {
+export function hasLoginEnvironment(references: LoginEnvironmentReferences) {
   return Boolean(
-    process.env.PLAYWRIGHT_LOGIN_URL?.trim()
-      && process.env.PLAYWRIGHT_USERNAME?.trim()
-      && process.env.PLAYWRIGHT_PASSWORD
+    process.env[references.loginUrlEnv]?.trim()
+      && process.env[references.usernameEnv]?.trim()
+      && process.env[references.passwordEnv]
   );
 }
 
-export function getLoginEnvironment() {
+export function getLoginEnvironment(references: LoginEnvironmentReferences) {
   return {
-    loginUrl: readEnvironment('PLAYWRIGHT_LOGIN_URL'),
-    username: readEnvironment('PLAYWRIGHT_USERNAME'),
-    password: readEnvironment('PLAYWRIGHT_PASSWORD')
+    loginUrl: readEnvironment(references.loginUrlEnv),
+    username: readEnvironment(references.usernameEnv),
+    password: readEnvironment(references.passwordEnv)
   };
 }

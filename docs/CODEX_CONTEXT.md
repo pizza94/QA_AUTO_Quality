@@ -25,6 +25,8 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - The first business flow is login (`TC-LOGIN-001`) under `tests/modules/login/`; credentials are read only from runtime environment variables.
 - Live login was verified successfully: the login form disappears, the URL leaves the login route, and the Data Portal welcome heading becomes visible.
 - Git workflow: create local commits for completed work, and batch-push only on an explicit user request.
+- TC input and expected values use YAML under `test-data/<menu>/`; credential fields contain environment-variable references, never plaintext secrets.
+- `TC-LOGIN-001` loads `test-data/login/tc-login-001.yml` and resolves its login URL and credentials from the referenced runtime environment variables.
 
 ## Next action
 
