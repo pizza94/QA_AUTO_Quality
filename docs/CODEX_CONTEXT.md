@@ -21,6 +21,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Non-secret TC input and expected values are stored separately under `test-data/<menu>/`; URLs and credentials remain environment variables.
 - The initial smoke test is organized under `tests/modules/smoke/` with separate page, flow, and spec files as the reference module layout.
 - GitHub target repository: `https://github.com/pizza94/QA_AUTO_Quality` (`origin`).
+- Local `main` tracks `origin/main`; the organized project scaffold has been pushed successfully.
 
 ## Next action
 
