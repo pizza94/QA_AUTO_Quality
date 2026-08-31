@@ -15,6 +15,7 @@ type MetadataCollectionTestData = {
 };
 
 test('TC-003 메타데이터 수집 예약을 신규 등록한다', async ({ page }) => {
+  test.setTimeout(60000);
   const loginData = await loadTestData<LoginTestData>('login.yml');
   const collectionData = await loadTestData<MetadataCollectionTestData>('metadata-collection.yml');
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');

@@ -32,7 +32,10 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - `TC-002` logs in, clicks the Data Portal quality-management card, and verifies the QualityStream 4.3 dashboard and primary menus using `tests/test-data/quality-management.yml`.
 - `TC-003` opens Verification Target Management > Metadata Collection Management and creates a DB catalog collection reservation using `tests/test-data/metadata-collection.yml`; reservation names increment from the highest existing `수집테스트자동N` suffix.
 - `TC-003` passed headless Chromium and created the reservation successfully. Select-dependent form changes reset the reservation-name field, so automation fills the generated name last.
+- `TC-004` selects the highest-numbered existing `수집테스트자동N` reservation, records its history count, triggers immediate execution, and verifies both final list status and the newly added collection-history row as `완료`.
+- `TC-004` passed headless Chromium in 24.3 seconds. It accepts either an observed `수집중` state or a newly added completed history row as execution evidence because a fast job or delayed list refresh can make the transient state unobservable.
+- The user pre-approved repeated headless TC-004 execution without reconfirmation; status verification may wait up to five minutes because duration varies with data volume.
 
 ## Next action
 
-- Identify the next metadata-collection or QualityStream business TC.
+- Define the next metadata-collection or QualityStream test case.

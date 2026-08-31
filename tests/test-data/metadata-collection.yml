@@ -7,3 +7,9 @@ input:
   timeType: 특정시
   hour: '15'
   minute: '30'
+
+immediateExecution:
+  reservationNamePrefix: 수집테스트자동
+  runningStatus: 수집중
+  completedStatus: 완료
+  completionTimeoutMs: 300000

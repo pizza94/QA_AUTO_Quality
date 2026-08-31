@@ -25,6 +25,7 @@ npm.cmd run test:chromium
 - `npm run test:login`: 환경변수로 제공한 계정의 로그인 TC
 - `npm run test:quality`: 로그인 후 QualityStream 진입 TC
 - `npm run test:collection`: 증가형 예약명으로 메타데이터 수집 예약 등록 TC
+- `npm run test:collection-now`: 최신 증가형 수집 예약 즉시실행 TC
 - `npm run test:headed`: 브라우저가 보이는 상태로 실행
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서

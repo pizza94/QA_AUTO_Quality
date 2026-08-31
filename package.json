@@ -8,6 +8,7 @@
     "test:login": "playwright test tests/modules/login/login.spec.ts --project=chromium --workers=1",
     "test:quality": "playwright test tests/modules/quality-management/quality-management.spec.ts --project=chromium --workers=1",
     "test:collection": "playwright test tests/modules/metadata-collection/metadata-collection.spec.ts --project=chromium --workers=1",
+    "test:collection-now": "playwright test tests/modules/metadata-collection/metadata-collection-immediate.spec.ts --project=chromium --workers=1",
     "test:headed": "playwright test --project=chromium --headed --workers=1",
     "test:ui": "playwright test --ui",
     "test:list": "playwright test --list",
