@@ -31,7 +31,7 @@ export class MetadataCollectionPage {
   }
 
   get metadataCollectionTab() {
-    return this.region.getByRole('tab', { name: '메타데이터수집관리' });
+    return this.page.getByRole('tab', { name: '메타데이터수집관리' }).filter({ visible: true });
   }
 
   get reservationNameCells() {

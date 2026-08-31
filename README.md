@@ -36,6 +36,8 @@ npm.cmd run test:chromium
 새 TC는 개별 spec과 함께 `tests/procedures/full-quality-procedure.spec.ts`에 TC 번호순 `test.step`으로 추가하여 전체 시연에도 항상 포함합니다.
 CSV와 전체 절차가 다르면 사전점검 단계에서 실행을 차단합니다. 새 대화나 장기간 중단 후에는 단일 기준 파일 `tests/test-context/project-context.yml`부터 확인합니다. 실행 구조·재시작 절차·원본 경로·불변 규칙·버전 정책을 이 파일에서 통합 관리하며, 사전점검이 파일 경로와 자동화 버전을 확인합니다. 버전 변경 이력은 `CHANGELOG.md`에 남깁니다.
 
+일반 변경은 Git 커밋으로 저장하고 날짜별 과정은 작업일지에 남깁니다. 현재 등록된 전체 TC가 통과한 검증 기준점에서만 `package.json`과 컨텍스트의 SemVer를 올리고 `CHANGELOG.md`를 갱신한 뒤 `vX.Y.Z` 태그를 생성합니다. 실행기록에는 자동화 버전과 정확한 Git 커밋이 함께 남습니다.
+
 전체 실행마다 자동화 버전과 Git 커밋을 `logs/test-runs/YYYY-MM-DD/*.json`에 로컬 기록하며 Git에는 올리지 않습니다.
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서
