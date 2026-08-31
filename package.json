@@ -1,0 +1,17 @@
+{
+  "name": "qa-auto-quality",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium --workers=1",
+    "test:headed": "playwright test --project=chromium --headed --workers=1",
+    "test:ui": "playwright test --ui",
+    "test:list": "playwright test --list",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0"
+  }
+}
+
