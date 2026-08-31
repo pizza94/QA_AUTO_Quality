@@ -17,8 +17,14 @@ import {
   type ProfilingTarget,
   type ProfilingColumnTarget
 } from '../modules/profiling-settings/profiling-settings.page';
-import { verifyConfiguredColumnsInAnalysis } from '../modules/column-analysis/column-analysis.flow';
-import type { ColumnAnalysisInput } from '../modules/column-analysis/column-analysis.page';
+import {
+  applyMappingRulesAndRerun,
+  verifyConfiguredColumnsInAnalysis
+} from '../modules/column-analysis/column-analysis.flow';
+import type {
+  ColumnAnalysisInput,
+  MappingRuleInput
+} from '../modules/column-analysis/column-analysis.page';
 
 type LoginData = {
   credentials: LoginEnvironmentReferences;
@@ -46,7 +52,10 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
   const collectionData = await loadTestData<CollectionData>('metadata-collection.yml');
   const targetData = await loadTestData<{ input: VerificationTargetInput }>('verification-target.yml');
   const profilingData = await loadTestData<{ input: ProfilingSettingsInput }>('profiling-settings.yml');
-  const columnAnalysisData = await loadTestData<{ input: ColumnAnalysisInput }>('column-analysis.yml');
+  const columnAnalysisData = await loadTestData<{
+    input: ColumnAnalysisInput;
+    mappingRule: MappingRuleInput;
+  }>('column-analysis.yml');
 
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');
   test.setTimeout(collectionData.immediateExecution.completionTimeoutMs + 180000);
@@ -145,5 +154,19 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
       page, columnAnalysisData.input, profilingTarget, profilingColumns
     );
     expect(results).toHaveLength(profilingColumns.length);
+  });
+
+  await test.step('TC-008 실행 컬럼 매핑룰 적용 및 재실행', async () => {
+    if (!profilingTarget || !profilingColumns.length) {
+      throw new Error('TC-006 프로파일링 대상 또는 컬럼 정보가 없습니다.');
+    }
+    const { applied } = await applyMappingRulesAndRerun(
+      page,
+      columnAnalysisData.input,
+      columnAnalysisData.mappingRule,
+      profilingTarget,
+      profilingColumns
+    );
+    expect(applied).toHaveLength(profilingColumns.length);
   });
 });

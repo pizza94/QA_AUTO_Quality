@@ -6,3 +6,6 @@ input:
   database: ORA19C
   owner: META42_DEV
   exactTableSearchOption: '='
+mappingRule:
+  executionHistory: 'Y'
+  fallbackRule: 숫자완성 테스트

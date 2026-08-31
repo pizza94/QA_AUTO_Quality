@@ -18,6 +18,11 @@ export type ColumnAnalysisInput = {
   exactTableSearchOption: string;
 };
 
+export type MappingRuleInput = {
+  executionHistory: string;
+  fallbackRule: string;
+};
+
 type ColumnAnalysisResult = ProfilingColumnTarget & {
   executedAt: string;
   jobStatus: string;
@@ -29,6 +34,7 @@ type ColumnAnalysisResult = ProfilingColumnTarget & {
   owner: string;
   tableName: string;
   tableId: string;
+  dataType: string;
 };
 
 export class ColumnAnalysisPage {
@@ -111,9 +117,68 @@ export class ColumnAnalysisPage {
         tableName: cell(10),
         tableId: cell(11),
         columnName: cell(12),
-        columnId: cell(13)
+        columnId: cell(13),
+        dataType: cell(18)
       };
     }));
+  }
+
+  private async scrollToHeader(name: string) {
+    const viewport = this.region.locator(
+      '#columnAnalysisColumnsGrid .slick-viewport-top.slick-viewport-left'
+    );
+    const header = this.region.locator('#columnAnalysisColumnsGrid .slick-header-column').filter({
+      hasText: new RegExp(`^${escapeRegExp(name)}$`)
+    });
+    const left = await header.evaluate((node) => (node as HTMLElement).offsetLeft);
+    await viewport.evaluate((node, targetLeft) => {
+      node.scrollLeft = Math.max(0, targetLeft - 300);
+      node.dispatchEvent(new Event('scroll'));
+    }, left);
+  }
+
+  mappingRuleFor(column: ColumnAnalysisResult, fallbackRule: string) {
+    const name = column.columnName.replace(/\s/g, '');
+    if (/휴대폰/.test(name)) return '휴대폰번호+구분자(설정)';
+    if (/전화/.test(name)) return '전화번호+구분자(설정)';
+    if (/우편/.test(name)) return '우편번호';
+    if (/여부|유무|YN$/i.test(name)) return '여부(Y/N)';
+    if (/금액|금원|가격/.test(name)) return '금액';
+    if (/수량|건수/.test(name)) return '수량';
+    if (/코드/.test(name)) return '영문+숫자';
+    if (/번호|순번|차수/.test(name) && /NUMBER|INT|DECIMAL|NUMERIC/i.test(column.dataType)) {
+      return '숫자완성';
+    }
+    if (/명$|이름|성명/.test(name)) return '한글완성';
+    return fallbackRule;
+  }
+
+  async applyMappingRules(
+    targetResults: ColumnAnalysisResult[],
+    columnIds: string[],
+    fallbackRule: string
+  ) {
+    const selectedRows = targetResults
+      .map((result, rowIndex) => ({ result, rowIndex }))
+      .filter(({ result }) => columnIds.includes(result.columnId));
+    await this.scrollToHeader('매핑룰');
+
+    const applied: Array<{ columnId: string; rule: string; message: string }> = [];
+    for (const { result, rowIndex } of selectedRows) {
+      const rule = this.mappingRuleFor(result, fallbackRule);
+      const select = this.rows.nth(rowIndex).locator('select[name="column.mappingRuleObjectId"]');
+      await select.waitFor({ state: 'visible' });
+      let message = '';
+      const acceptDialog = async (dialog: import('@playwright/test').Dialog) => {
+        message = dialog.message();
+        await dialog.accept();
+      };
+      this.page.once('dialog', acceptDialog);
+      await select.selectOption({ label: rule });
+      await this.page.waitForTimeout(300);
+      applied.push({ columnId: result.columnId, rule, message });
+    }
+    return applied;
   }
 
   rowByColumnId(columnId: string) {
