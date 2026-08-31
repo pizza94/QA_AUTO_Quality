@@ -8,10 +8,12 @@
     "test:headed": "playwright test --project=chromium --headed --workers=1",
     "test:ui": "playwright test --ui",
     "test:list": "playwright test --list",
+    "typecheck": "tsc --noEmit",
     "report": "playwright show-report"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.0"
+    "@playwright/test": "^1.61.0",
+    "@types/node": "^26.4.0",
+    "typescript": "^7.0.2"
   }
 }
-
