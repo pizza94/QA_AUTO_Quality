@@ -32,6 +32,7 @@ type CollectionData = {
     runningStatus: string;
     completedStatus: string;
     completionTimeoutMs: number;
+    apiPollIntervalMs: number;
   };
 };
 
@@ -81,20 +82,24 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
     const historyCountBefore = await collectionPage.collectionHistoryRows.count();
     await collectionPage.closeDetails();
     await collectionPage.runImmediately();
-
-    await expect.poll(async () => {
-      await collectionPage.refreshList();
-      const status = (await collectionPage.reservationStatus(reservationName).innerText()).trim();
-      await collectionPage.selectReservation(reservationName);
-      await collectionPage.openCollectionHistory();
-      const historyCount = await collectionPage.collectionHistoryRows.count();
-      const historyStatus = historyCount
-        ? (await collectionPage.latestCollectionHistoryStatus.innerText()).trim()
-        : '';
-      return status === collectionData.immediateExecution.completedStatus
-        && historyCount > historyCountBefore
-        && historyStatus === collectionData.immediateExecution.completedStatus;
-    }, { timeout: collectionData.immediateExecution.completionTimeoutMs }).toBe(true);
+    const statusRequest = await collectionPage.captureStatusRequest(reservationName);
+    await collectionPage.waitForStatusViaApi(
+      statusRequest,
+      reservationName,
+      collectionData.immediateExecution.completedStatus,
+      collectionData.immediateExecution.completionTimeoutMs,
+      collectionData.immediateExecution.apiPollIntervalMs
+    );
+    await collectionPage.refreshList();
+    await expect(collectionPage.reservationStatus(reservationName)).toHaveText(
+      collectionData.immediateExecution.completedStatus
+    );
+    await collectionPage.selectReservation(reservationName);
+    await collectionPage.openCollectionHistory();
+    await expect(collectionPage.collectionHistoryRows).toHaveCount(historyCountBefore + 1);
+    await expect(collectionPage.latestCollectionHistoryStatus).toHaveText(
+      collectionData.immediateExecution.completedStatus
+    );
   });
 
   await test.step('TC-005 검증대상 1건 반영', async () => {

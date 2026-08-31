@@ -13,6 +13,7 @@ type ImmediateExecutionTestData = {
     runningStatus: string;
     completedStatus: string;
     completionTimeoutMs: number;
+    apiPollIntervalMs: number;
   };
 };
 
@@ -29,54 +30,24 @@ test('TC-004 최신 메타데이터 수집 예약을 즉시실행한다', async 
       collectionData.immediateExecution.reservationNamePrefix
     );
 
-  await expect
-    .poll(
-      async () => {
-        await metadataCollectionPage.refreshList();
-        const status = (
-          await metadataCollectionPage.reservationStatus(reservationName).innerText()
-        ).trim();
-
-        if (status === collectionData.immediateExecution.runningStatus) {
-          return true;
-        }
-
-        await metadataCollectionPage.selectReservation(reservationName);
-        await metadataCollectionPage.openCollectionHistory();
-        const historyCount = await metadataCollectionPage.collectionHistoryRows.count();
-        const latestHistoryStatus = historyCount
-          ? (await metadataCollectionPage.latestCollectionHistoryStatus.innerText()).trim()
-          : '';
-
-        return status === collectionData.immediateExecution.completedStatus
-          && historyCount > historyCountBefore
-          && latestHistoryStatus === collectionData.immediateExecution.completedStatus;
-      },
-      { timeout: collectionData.immediateExecution.completionTimeoutMs }
-    )
-    .toBe(true);
-
-  await expect
-    .poll(
-      async () => {
-        await metadataCollectionPage.refreshList();
-        const status = (
-          await metadataCollectionPage.reservationStatus(reservationName).innerText()
-        ).trim();
-        await metadataCollectionPage.selectReservation(reservationName);
-        await metadataCollectionPage.openCollectionHistory();
-        const historyCount = await metadataCollectionPage.collectionHistoryRows.count();
-        const latestHistoryStatus = historyCount
-          ? (await metadataCollectionPage.latestCollectionHistoryStatus.innerText()).trim()
-          : '';
-
-        return status === collectionData.immediateExecution.completedStatus
-          && historyCount > historyCountBefore
-          && latestHistoryStatus === collectionData.immediateExecution.completedStatus;
-      },
-      { timeout: collectionData.immediateExecution.completionTimeoutMs }
-    )
-    .toBe(true);
+  const statusRequest = await metadataCollectionPage.captureStatusRequest(reservationName);
+  await metadataCollectionPage.waitForStatusViaApi(
+    statusRequest,
+    reservationName,
+    collectionData.immediateExecution.completedStatus,
+    collectionData.immediateExecution.completionTimeoutMs,
+    collectionData.immediateExecution.apiPollIntervalMs
+  );
+  await metadataCollectionPage.refreshList();
+  await expect(metadataCollectionPage.reservationStatus(reservationName)).toHaveText(
+    collectionData.immediateExecution.completedStatus
+  );
+  await metadataCollectionPage.selectReservation(reservationName);
+  await metadataCollectionPage.openCollectionHistory();
+  await expect(metadataCollectionPage.collectionHistoryRows).toHaveCount(historyCountBefore + 1);
+  await expect(metadataCollectionPage.latestCollectionHistoryStatus).toHaveText(
+    collectionData.immediateExecution.completedStatus
+  );
 
   await expect(metadataCollectionPage.collectionHistoryTab).toHaveAttribute('aria-selected', 'true');
 });
