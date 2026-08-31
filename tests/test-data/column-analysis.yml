@@ -1,0 +1,8 @@
+input:
+  system: 큐에이
+  business: QA상품
+  executionHistory: 'N'
+  collectionTarget: DBCatalog
+  database: ORA19C
+  owner: META42_DEV
+  exactTableSearchOption: '='

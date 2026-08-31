@@ -11,10 +11,15 @@ export type ProfilingSettingsInput = {
   expectedExecutionStatus: string;
 };
 
-type ProfilingTarget = {
+export type ProfilingTarget = {
   reflectedAt: string;
   tableId: string;
   tableName: string;
+};
+
+export type ProfilingColumnTarget = {
+  columnName: string;
+  columnId: string;
 };
 
 function escapeRegExp(value: string) {
@@ -213,6 +218,19 @@ export class ProfilingSettingsPage {
     }
 
     await this.save('#saveColumns');
+  }
+
+  async configuredColumns(): Promise<ProfilingColumnTarget[]> {
+    await this.columnsTab.click();
+    await this.columnRows.first().waitFor({ state: 'visible' });
+    return this.columnRows.evaluateAll((rows) => rows.flatMap((row) => {
+      const execution = row.querySelector<HTMLInputElement>('input[name="executeYn"]');
+      const column = row.querySelector<HTMLInputElement>('input[name="columnYn"]');
+      if (execution?.checked !== true || column?.checked !== true) return [];
+      const columnName = row.querySelector('.slick-cell.l7.r7')?.textContent?.trim() ?? '';
+      const columnId = row.querySelector('.slick-cell.l8.r8')?.textContent?.trim() ?? '';
+      return columnName && columnId ? [{ columnName, columnId }] : [];
+    }));
   }
 
   async reloadAndVerifyColumns(target: ProfilingTarget, input: ProfilingSettingsInput) {

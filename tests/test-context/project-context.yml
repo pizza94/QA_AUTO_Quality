@@ -5,9 +5,10 @@ purpose: 대화 기억 없이 이 파일과 연결된 원본만으로 장기간 
 
 currentState:
   branch: main
-  completedTc: TC-001 ~ TC-006
+  completedTc: TC-001 ~ TC-007
+  implementedTc: TC-001 ~ TC-007
   executionMode: 하나의 브라우저 페이지와 세션을 사용하는 순차 절차
-  nextAction: 전체 절차 재검증 후 다음 TC 정의
+  nextAction: TC-001 ~ TC-007 전체 절차 재검증
 
 readOrder:
   - tests/test-context/project-context.yml
@@ -53,6 +54,8 @@ invariants:
   - 보이는 하위 메뉴는 바로 클릭하고 숨겨진 경우에만 대메뉴를 펼친다.
   - CSV TC ID와 전체 절차 test.step ID의 구성과 순서는 같아야 한다.
   - 새 TC는 CSV·YAML·메뉴 모듈·개별 spec·전체 절차에 함께 추가한다.
+  - TC-007은 TC-006 테이블ID를 정확검색하고 두 체크박스가 저장된 컬럼ID 집합과 조회 컬럼ID 집합을 비교한 뒤 해당 컬럼 전체를 선택해 실행한다.
+  - 전체 절차에서 TC-006 실제 테이블ID와 체크 컬럼ID는 테스트 세션 메모리로만 TC-007에 전달하고 파일로 저장하지 않는다.
   - 실제 접속정보가 있는 local YAML은 Git에 커밋하지 않는다.
   - UI 화면은 사용자가 명시적으로 요청한 경우에만 표시한다.
   - 생성된 실패 로그와 실행 메타데이터는 Git에 커밋하지 않는다.

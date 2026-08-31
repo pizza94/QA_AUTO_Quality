@@ -18,6 +18,7 @@ export async function enableLatestReflectedTableProfiling(
   await profilingSettingsPage.reloadAndVerifyTableExecution(target, input);
   await profilingSettingsPage.enableAllColumns();
   await profilingSettingsPage.reloadAndVerifyColumns(target, input);
+  const columns = await profilingSettingsPage.configuredColumns();
 
-  return { target };
+  return { target, columns };
 }

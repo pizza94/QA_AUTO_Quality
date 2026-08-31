@@ -13,8 +13,12 @@ import {
 } from '../modules/verification-target/verification-target.page';
 import {
   ProfilingSettingsPage,
-  type ProfilingSettingsInput
+  type ProfilingSettingsInput,
+  type ProfilingTarget,
+  type ProfilingColumnTarget
 } from '../modules/profiling-settings/profiling-settings.page';
+import { verifyConfiguredColumnsInAnalysis } from '../modules/column-analysis/column-analysis.flow';
+import type { ColumnAnalysisInput } from '../modules/column-analysis/column-analysis.page';
 
 type LoginData = {
   credentials: LoginEnvironmentReferences;
@@ -42,6 +46,7 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
   const collectionData = await loadTestData<CollectionData>('metadata-collection.yml');
   const targetData = await loadTestData<{ input: VerificationTargetInput }>('verification-target.yml');
   const profilingData = await loadTestData<{ input: ProfilingSettingsInput }>('profiling-settings.yml');
+  const columnAnalysisData = await loadTestData<{ input: ColumnAnalysisInput }>('column-analysis.yml');
 
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');
   test.setTimeout(collectionData.immediateExecution.completionTimeoutMs + 180000);
@@ -115,6 +120,8 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
     expect(alertMessage).not.toBe('');
   });
 
+  let profilingTarget: ProfilingTarget | undefined;
+  let profilingColumns: ProfilingColumnTarget[] = [];
   await test.step('TC-006 테이블과 컬럼 프로파일링 설정', async () => {
     const profilingPage = new ProfilingSettingsPage(page);
     await profilingPage.open();
@@ -125,6 +132,18 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
     await profilingPage.reloadAndVerifyTableExecution(target, profilingData.input);
     await profilingPage.enableAllColumns();
     await profilingPage.reloadAndVerifyColumns(target, profilingData.input);
+    profilingTarget = target;
+    profilingColumns = await profilingPage.configuredColumns();
     expect(target.tableId).not.toBe('');
+  });
+
+  await test.step('TC-007 설정 컬럼의 컬럼분석 조회 결과 확인', async () => {
+    if (!profilingTarget || !profilingColumns.length) {
+      throw new Error('TC-006 프로파일링 대상 또는 컬럼 정보가 없습니다.');
+    }
+    const { results } = await verifyConfiguredColumnsInAnalysis(
+      page, columnAnalysisData.input, profilingTarget, profilingColumns
+    );
+    expect(results).toHaveLength(profilingColumns.length);
   });
 });

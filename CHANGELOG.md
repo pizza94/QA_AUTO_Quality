@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- TC-007 프로파일링 컬럼분석에서 TC-006 설정 컬럼 전체와 실행이력 N 조회 결과 비교 후 해당 컬럼 실행
+
 ## 0.3.0 - 2026-08-31
 
 - 장기 재실행 컨텍스트를 `tests/test-context/project-context.yml` 단일 파일로 통합

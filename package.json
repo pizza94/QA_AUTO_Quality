@@ -11,6 +11,7 @@
     "test:collection-now": "playwright test tests/modules/metadata-collection/metadata-collection-immediate.spec.ts --project=chromium --workers=1",
     "test:verification-target": "playwright test tests/modules/verification-target/verification-target.spec.ts --project=chromium --workers=1",
     "test:profiling-settings": "playwright test tests/modules/profiling-settings/profiling-settings.spec.ts --project=chromium --workers=1",
+    "test:column-analysis": "playwright test tests/modules/column-analysis/column-analysis.spec.ts --project=chromium --workers=1",
     "check:tc-sync": "node scripts/check-tc-sync.cjs",
     "preflight": "node scripts/preflight.cjs",
     "test:procedure": "npm run preflight && playwright test tests/procedures/full-quality-procedure.spec.ts --project=chromium --workers=1",
