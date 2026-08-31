@@ -1,7 +1,5 @@
 credentials:
-  loginUrlEnv: PLAYWRIGHT_LOGIN_URL
-  usernameEnv: PLAYWRIGHT_USERNAME
-  passwordEnv: PLAYWRIGHT_PASSWORD
+  localFile: login.local.yml
 expected:
   landingHeading: Welcome to Data Portal
   urlMustNotContain: /login

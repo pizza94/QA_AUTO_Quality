@@ -13,7 +13,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Initial Chromium Playwright scaffold created.
 - Failed tests write dedicated logs to `logs/test-errors/YYYY-MM-DD/*.log` using the Asia/Seoul execution date; each log includes deterministic failure category, likely cause, and recommended action analysis.
 - Browser console warnings/errors and uncaught page errors are attached to failed-test logs.
-- Credentials must remain in local environment variables and must not be committed.
+- Login URL and credentials are loaded from the Git-ignored local YAML referenced by `tests/test-data/login.yml`; the populated local file must never be committed.
 - TC scenarios use a one-way sequential flow: enter the screen, input data, execute the action, verify the result, then advance to the next step without navigating backward.
 - Browser tests run headlessly by default. Show or preserve visible browser UI only when the user explicitly requests a live demonstration; do not generate chat screenshots unless explicitly requested.
 - Visible UI demonstrations must use `npm.cmd run test:headed`. The full procedure uses one browser page and session, logs in only in TC-001, and runs later TC steps from the preceding state without replaying earlier steps; do not directly operate the user's visible browser for test execution or inspection.
@@ -28,8 +28,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Live login was verified successfully: the login form disappears, the URL leaves the login route, and the Data Portal welcome heading becomes visible.
 - Git workflow: leave completed changes uncommitted by default; commit only on an explicit user request and push only on an explicit push request.
 - The Data Portal renders both a hidden side link and a visible card label for quality management; automation selects the visible exact-text card.
-- YAML credential fields contain environment-variable references, never plaintext secrets.
-- The environment template is `tests/test-data/.env.example`; it contains placeholders only.
+- The tracked credential file contains only a reference to `tests/test-data/login.local.yml`; the populated local YAML is ignored and `login.local.example.yml` contains placeholders only.
 - `TC-001` is documented in the master CSV and loads `tests/test-data/login.yml` for automation values.
 - `TC-002` logs in, clicks the Data Portal quality-management card, and verifies the QualityStream 4.3 dashboard and primary menus using `tests/test-data/quality-management.yml`.
 - `TC-003` opens Verification Target Management > Metadata Collection Management and creates a DB catalog collection reservation using `tests/test-data/metadata-collection.yml`; reservation names increment from the highest existing `수집테스트자동N` suffix.

@@ -5,4 +5,4 @@ test-results/
 .env.*
 !.env.example
 logs/test-errors/*.log
-
+tests/test-data/*.local.yml

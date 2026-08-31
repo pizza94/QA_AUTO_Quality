@@ -15,8 +15,8 @@ $env:PLAYWRIGHT_LOGIN_URL = 'https://target.example/login'
 npm.cmd run test:chromium
 ```
 
-로그인 정보가 필요한 경우 `PLAYWRIGHT_USERNAME`, `PLAYWRIGHT_PASSWORD` 환경변수를 사용합니다.
-실제 URL·자격증명이 들어간 `.env` 파일이나 설정은 Git에 커밋하지 않습니다.
+로그인 정보는 `tests/test-data/login.yml`이 가리키는 Git 제외 파일 `tests/test-data/login.local.yml`에서 읽습니다.
+`login.local.example.yml`을 복사해 실제 URL·계정·비밀번호를 입력하며, 실제 값이 든 로컬 YAML은 Git에 커밋하지 않습니다.
 
 ## 주요 명령
 
