@@ -18,7 +18,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - The final deliverable includes a live browser demonstration of each TC. Operate the visible UI directly and do not generate chat screenshots unless explicitly requested.
 - Work is recorded by date under `docs/work-log/YYYY-MM-DD.md`.
 - Automation is modularized per QualityStream menu under `tests/modules/<menu>/` using page, flow, and spec responsibilities.
-- All test assets live under `tests/`: TC definitions and execution history are maintained in `tests/test-cases/qa-test-cases.csv`, while non-secret automation inputs and verification values are stored in `tests/test-data/<menu>.yml`.
+- All test assets live under `tests/`: TC definitions and execution history are maintained in `tests/test-cases/qa-test-cases.csv`; every non-code test-data and environment-information file lives under `tests/test-data/`, while loader code stays under `tests/support/`.
 - The initial smoke test is organized under `tests/modules/smoke/` with separate page, flow, and spec files as the reference module layout.
 - GitHub target repository: `https://github.com/pizza94/QA_AUTO_Quality` (`origin`).
 - Local `main` tracks `origin/main`; the organized project scaffold has been pushed successfully.
@@ -26,6 +26,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Live login was verified successfully: the login form disappears, the URL leaves the login route, and the Data Portal welcome heading becomes visible.
 - Git workflow: create local commits for completed work, and batch-push only on an explicit user request.
 - YAML credential fields contain environment-variable references, never plaintext secrets.
+- The environment template is `tests/test-data/.env.example`; it contains placeholders only.
 - `TC-LOGIN-001` is documented in the master CSV and loads `tests/test-data/login.yml` for automation values.
 
 ## Next action

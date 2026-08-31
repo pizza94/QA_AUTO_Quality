@@ -39,7 +39,7 @@ QA_AUTO_Quality/
 ├─ tests/
 │  ├─ modules/<menu>/            # 메뉴별 Page / Flow / Spec
 │  ├─ test-cases/                # 전체 TC 목록과 실행 이력 CSV
-│  ├─ test-data/                 # 메뉴별 자동화 입력값·검증값 YAML
+│  ├─ test-data/                 # 테스트 입력값·검증값 YAML과 환경정보 템플릿
 │  ├─ support/                   # 공통 데이터 로더와 유틸리티
 │  └─ fixtures.ts                # 공통 Playwright fixture
 ├─ playwright.config.ts
@@ -50,6 +50,9 @@ QA_AUTO_Quality/
 `<menu>.spec.ts`를 한 묶음으로 추가합니다. TC 정의와 실행 이력은
 `tests/test-cases/qa-test-cases.csv`, 비민감 자동화 입력값과 검증값은
 `tests/test-data/<menu>.yml`에서 관리합니다.
+
+환경변수 템플릿은 `tests/test-data/.env.example`에서 확인합니다. 로더와 검증 코드만
+`tests/support/`에 두며, 실제 URL과 자격증명 값은 저장하지 않습니다.
 
 로그인 TC 실행 전에는 `PLAYWRIGHT_LOGIN_URL`, `PLAYWRIGHT_USERNAME`,
 `PLAYWRIGHT_PASSWORD`를 현재 터미널 세션의 환경변수로 설정합니다. 실제 URL과
