@@ -1,5 +1,6 @@
 input:
-  jobNamePrefix: 프로파일링점검
+  jobType: 프로파일링
+  jobNamePrefix: 프로파일링점검_자동화
   verificationType: Column
   description: 자동화테스트
   system: 큐에이

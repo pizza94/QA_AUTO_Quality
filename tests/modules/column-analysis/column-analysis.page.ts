@@ -106,7 +106,21 @@ export class ColumnAnalysisPage {
     await this.region.locator('#historyExec').selectOption({ label: input.executionHistory });
     await this.region.locator('input[name="table.dbName"]').fill(input.database);
     await this.region.locator('input[name="table.owner"]').fill(input.owner);
+    const searchResponse = this.page.waitForResponse((response) => {
+      const request = response.request();
+      if (!response.ok() || !['xhr', 'fetch'].includes(request.resourceType())) return false;
+      const requestText = `${decodeURIComponent(request.url())}\n${request.postData() ?? ''}`;
+      return requestText.includes(target.tableId);
+    }, { timeout: 15000 });
     await this.searchButton.click();
+    await searchResponse;
+    const viewport = this.region.locator(
+      '#columnAnalysisColumnsGrid .slick-viewport-top.slick-viewport-left'
+    );
+    await viewport.evaluate((node) => {
+      node.scrollLeft = 0;
+      node.dispatchEvent(new Event('scroll'));
+    });
     await expect.poll(async () => {
       if (
         await this.region.locator('#blankMsg_columnAnalysisColumnsGrid').isVisible()

@@ -6,6 +6,7 @@ function escapeRegExp(value: string) {
 }
 
 export type InspectionWorkInput = {
+  jobType: string;
   jobNamePrefix: string;
   verificationType: string;
   description: string;
@@ -58,16 +59,44 @@ export class InspectionWorkPage {
     await this.inspectionWorkLink.click();
     await this.manageTab.waitFor({ state: 'visible' });
     await this.searchButton.click();
+    await Promise.race([
+      this.manageRegion.locator('#manageGrid .slick-row').first().waitFor({ state: 'visible' }),
+      this.manageRegion.locator('#blankMsg_manageGrid').waitFor({ state: 'visible' })
+    ]);
   }
 
-  async nextJobName(prefix: string) {
+  private async waitForManageResults() {
+    await Promise.race([
+      this.manageRegion.locator('#manageGrid .slick-row').first().waitFor({ state: 'visible' }),
+      this.manageRegion.locator('#blankMsg_manageGrid').waitFor({ state: 'visible' })
+    ]);
+  }
+
+  async nextJobName(input: InspectionWorkInput) {
+    await this.manageRegion.locator('#jobClassification').selectOption({ label: input.jobType });
+    await this.manageRegion.locator('input[name="name"]').fill(input.jobNamePrefix);
+    const searchResponse = this.page.waitForResponse((response) => {
+      const request = response.request();
+      if (!response.ok() || !['xhr', 'fetch'].includes(request.resourceType())) return false;
+      const requestText = `${decodeURIComponent(request.url())}\n${request.postData() ?? ''}`;
+      return requestText.includes(input.jobNamePrefix);
+    }, { timeout: 15000 });
+    await this.searchButton.click();
+    await searchResponse;
+    await this.waitForManageResults();
+
+    const prefix = input.jobNamePrefix;
     const matcher = new RegExp(`^${escapeRegExp(prefix)}(\\d+)$`);
     const names = await this.jobNameCells.allTextContents();
     const max = names.reduce((current, name) => {
       const match = name.trim().match(matcher);
       return match ? Math.max(current, Number(match[1])) : current;
     }, 0);
-    return `${prefix}${max + 1}`;
+    const nextName = `${prefix}${max + 1}`;
+    if (names.some((name) => name.trim() === nextName)) {
+      throw new Error(`점검작업명이 이미 존재합니다: ${nextName}`);
+    }
+    return nextName;
   }
 
   async openProfilingRegistration() {
@@ -100,7 +129,9 @@ export class InspectionWorkPage {
     const idCell = this.page.locator('.slick-cell.l7.r7').filter({
       hasText: new RegExp(`^${escapeRegExp(tableId)}$`)
     });
-    return this.registrationRegion.locator('#tableGrid .slick-row').filter({ has: idCell });
+    return this.registrationRegion.locator('#tableGrid .slick-row').filter({
+      has: idCell
+    });
   }
 
   selectedTableRow(tableId: string) {
@@ -136,16 +167,17 @@ export class InspectionWorkPage {
   }
 
   jobRow(jobName: string) {
-    const nameCell = this.page.locator('.slick-cell.l3.r3').filter({
-      hasText: new RegExp(`^${escapeRegExp(jobName)}$`)
+    return this.manageRegion.locator('#manageGrid .slick-row').filter({
+      has: this.page.locator('.slick-cell.l3.r3').filter({
+        hasText: new RegExp(`^${escapeRegExp(jobName)}$`)
+      })
     });
-    return this.manageRegion.locator('#manageGrid .slick-row').filter({ has: nameCell });
   }
 
   async returnAndVerify(jobName: string) {
     await this.manageTab.click();
     await this.manageRegion.locator('input[name="name"]').fill(jobName);
     await this.searchButton.click();
-    await this.jobRow(jobName).waitFor({ state: 'visible' });
+    await this.jobRow(jobName).first().waitFor({ state: 'visible' });
   }
 }

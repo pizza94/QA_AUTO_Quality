@@ -25,6 +25,7 @@
 - When filtering a scoped grid row with `locator.filter({ has })`, make the inner cell locator relative to the row and do not prefix the active menu region again.
 - For rerunnable TC-007, search execution history N first; if the same configured table has no N rows because its columns were already executed, search Y and verify/re-execute the same TC-006 column IDs.
 - After TC-007 or TC-008 starts column analysis, click the scoped search button every 10 seconds and continue only when every executed TC-006 column ID has a new execution timestamp and job status complete.
+- Before TC-009 registration, explicitly search profiling jobs by the configured name prefix, calculate max N from all loaded exact `prefixN` names, and register only the absent `prefix(N+1)` name.
 - Every list menu must click its scoped search button after entry before waiting for rows. Keep finite action and navigation timeouts so a wrong locator fails promptly instead of waiting for the full procedure timeout.
 - After saving a list item, click that menu's scoped search button again before verifying the saved row. For metadata collection execution, use the newly added collection-history row and its completed status as the authoritative completion evidence together with the list status.
 - During TC-004 collection waiting, click the scoped search button every 10 seconds and read the target reservation row until it becomes complete, then verify the newly added collection-history row and its completed status.

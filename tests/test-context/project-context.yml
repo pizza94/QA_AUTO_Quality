@@ -73,6 +73,12 @@ invariants:
 
   - TC-007 and TC-008 refresh column analysis through the scoped search button every 10 seconds and require every executed TC-006 column ID to have a new execution timestamp and completed job status.
 
+  - TC-009 waits for the inspection-work grid to finish loading before calculating the next numbered job name and treats duplicate legacy exact-name rows as a non-strict lookup during verification.
+
+  - TC-009 explicitly searches profiling jobs by prefix before registration and uses only the absent name whose numeric suffix is max plus one.
+
+  - Column-analysis grid state is evaluated only after the search response whose request contains the target table ID has completed, preventing stale empty-state reads during N-to-Y transitions.
+
 versionPolicy:
   source: package.json
   history: CHANGELOG.md, Git 커밋 및 vX.Y.Z 검증 태그

@@ -9,7 +9,7 @@ export async function registerProfilingInspectionWork(
 ) {
   const workPage = new InspectionWorkPage(page);
   await workPage.open();
-  const jobName = await workPage.nextJobName(input.jobNamePrefix);
+  const jobName = await workPage.nextJobName(input);
   await workPage.openProfilingRegistration();
   await workPage.fillJob(jobName, input);
   await workPage.searchTarget(input, target);
