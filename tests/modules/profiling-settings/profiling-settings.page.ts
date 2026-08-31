@@ -37,7 +37,7 @@ export class ProfilingSettingsPage {
   }
 
   get tableTab() {
-    return this.region.getByRole('tab', { name: '테이블' });
+    return this.page.getByRole('tab', { name: '테이블' }).filter({ visible: true });
   }
 
   get searchButton() {

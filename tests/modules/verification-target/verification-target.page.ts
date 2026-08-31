@@ -38,7 +38,7 @@ export class VerificationTargetPage {
   }
 
   get verificationTargetTab() {
-    return this.region.getByRole('tab', { name: '검증대상관리' });
+    return this.page.getByRole('tab', { name: '검증대상관리' }).filter({ visible: true });
   }
 
   get additionalFilterButton() {
