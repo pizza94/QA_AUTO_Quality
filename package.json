@@ -10,6 +10,8 @@
     "test:collection": "playwright test tests/modules/metadata-collection/metadata-collection.spec.ts --project=chromium --workers=1",
     "test:collection-now": "playwright test tests/modules/metadata-collection/metadata-collection-immediate.spec.ts --project=chromium --workers=1",
     "test:verification-target": "playwright test tests/modules/verification-target/verification-target.spec.ts --project=chromium --workers=1",
+    "test:profiling-settings": "playwright test tests/modules/profiling-settings/profiling-settings.spec.ts --project=chromium --workers=1",
+    "test:profiling-settings:headed": "playwright test tests/modules/profiling-settings/profiling-settings.spec.ts --project=chromium --headed --workers=1",
     "test:headed": "playwright test --project=chromium --headed --workers=1",
     "test:ui": "playwright test --ui",
     "test:list": "playwright test --list",

@@ -1,0 +1,9 @@
+input:
+  system: 큐에이
+  business: QA상품
+  collectionTargetOption: DB카탈로그
+  collectionTargetGridValue: DBCatalog
+  database: ORA19C
+  owner: META42_DEV
+  currentExecutionStatus: 전체
+  expectedExecutionStatus: 실행

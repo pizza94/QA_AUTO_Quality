@@ -26,7 +26,9 @@ npm.cmd run test:chromium
 - `npm run test:quality`: 로그인 후 QualityStream 진입 TC
 - `npm run test:collection`: 증가형 예약명으로 메타데이터 수집 예약 등록 TC
 - `npm run test:collection-now`: 최신 증가형 수집 예약 즉시실행 TC
-- `npm run test:verification-target`: 미반영 검증대상 상위 2건 업무 반영 TC
+- `npm run test:verification-target`: 미반영 검증대상 상위 1건 업무 반영 TC
+- `npm run test:profiling-settings`: 최근 반영 테이블 1건과 전체 컬럼 프로파일링 실행 설정 TC
+- `npm run test:profiling-settings:headed`: TC-006 화면 시연
 - `npm run test:headed`: 브라우저가 보이는 상태로 실행
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서

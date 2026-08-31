@@ -16,6 +16,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Credentials must remain in local environment variables and must not be committed.
 - TC scenarios use a one-way sequential flow: enter the screen, input data, execute the action, verify the result, then advance to the next step without navigating backward.
 - Browser tests run headlessly by default. Show or preserve visible browser UI only when the user explicitly requests a live demonstration; do not generate chat screenshots unless explicitly requested.
+- Visible UI demonstrations must use an explicit Playwright headed command; do not directly operate the user's visible browser for test execution or inspection.
 - Work is recorded by date under `docs/work-log/YYYY-MM-DD.md`.
 - Automation is modularized per QualityStream menu under `tests/modules/<menu>/` using page, flow, and spec responsibilities.
 - All test assets live under `tests/`: TC definitions and execution history are maintained in `tests/test-cases/qa-test-cases.csv`; every non-code test-data and environment-information file lives under `tests/test-data/`, while loader code stays under `tests/support/`.
@@ -35,9 +36,10 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - `TC-004` selects the highest-numbered existing `수집테스트자동N` reservation, records its history count, triggers immediate execution, and verifies both final list status and the newly added collection-history row as `완료`.
 - `TC-004` passed headless Chromium in 24.3 seconds. It accepts either an observed `수집중` state or a newly added completed history row as execution evidence because a fast job or delayed list refresh can make the transient state unobservable.
 - The user pre-approved repeated headless TC-004 execution without reconfirmation; status verification may wait up to five minutes because duration varies with data volume.
-- `TC-005` filters unreflected DBCatalog 신규 rows for ORA19C/META42_DEV with blank system/business values, selects the visually top two rows by grid position, and reflects them to 큐에이/QA상품.
-- `TC-005` passed headless Chromium and verified BAZ06B and BILLING_BASIC_INFO as reflected (`Y`) with the assigned system and business values.
+- `TC-005` filters unreflected DBCatalog 신규 rows for ORA19C/META42_DEV with blank system/business values, selects the visually top one row by grid position, and reflects it to 큐에이/QA상품.
+- The earlier two-row version passed and reflected BAZ06B and BILLING_BASIC_INFO. The updated one-row version also passed headless Chromium after the requirement change.
+- `TC-006` selects only the single most recently reflected 큐에이/QA상품 ORA19C/META42_DEV table, enables table execution, enables execution and column profiling for all of its columns, saves both stages, and verifies the table execution status. It passed headless Chromium in 12.5 seconds.
 
 ## Next action
 
-- Define the next QualityStream test case.
+- Define the next QualityStream test case after TC-006.

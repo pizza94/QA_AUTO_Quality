@@ -5,7 +5,7 @@ input:
   changeType: 신규
   database: ORA19C
   owner: META42_DEV
-  selectionCount: 2
+  selectionCount: 1
   system: 큐에이
   business: QA상품
   expectedReflectedYn: 'Y'
