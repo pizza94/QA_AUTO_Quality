@@ -1,0 +1,9 @@
+input:
+  reservationNamePrefix: 수집테스트자동
+  collectionTarget: DB카탈로그
+  database: ORA19C(META42_DEV)
+  cycleType: 특정일
+  executionDate: '2036-08-31'
+  timeType: 특정시
+  hour: '15'
+  minute: '30'

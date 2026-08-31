@@ -29,7 +29,8 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - The environment template is `tests/test-data/.env.example`; it contains placeholders only.
 - `TC-001` is documented in the master CSV and loads `tests/test-data/login.yml` for automation values.
 - `TC-002` logs in, clicks the Data Portal quality-management card, and verifies the QualityStream 4.3 dashboard and primary menus using `tests/test-data/quality-management.yml`.
+- `TC-003` opens Verification Target Management > Metadata Collection Management and creates a DB catalog collection reservation using `tests/test-data/metadata-collection.yml`; reservation names increment from the highest existing `수집테스트자동N` suffix.
 
 ## Next action
 
-- Identify the next QualityStream menu flow and its TC list.
+- Execute and verify the live save step for `TC-003` after receiving action-time confirmation.
