@@ -9,6 +9,6 @@
 - Keep failure logs under `logs/test-errors/`; do not commit generated `.log` files.
 - Record meaningful work in `docs/work-log/YYYY-MM-DD.md` using the Asia/Seoul date.
 - Keep each QualityStream menu under `tests/modules/<menu>/` with separate page, flow, and spec responsibilities.
-- Manage TC definitions and execution history in `docs/test-cases/qa-test-cases.csv`; keep non-secret automation inputs and verification values in `tests/test-data/<menu>.yml`. YAML credential fields must reference environment-variable names and never contain plaintext credentials.
+- Keep all test assets under `tests/`: manage TC definitions and execution history in `tests/test-cases/qa-test-cases.csv`, and keep non-secret automation inputs and verification values in `tests/test-data/<menu>.yml`. YAML credential fields must reference environment-variable names and never contain plaintext credentials.
 - For live UI demonstrations, operate the visible browser without generating chat screenshots unless explicitly requested.
 - Update `docs/CODEX_CONTEXT.md` after meaningful decisions or blockers.

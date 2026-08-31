@@ -34,11 +34,11 @@ npm.cmd run test:chromium
 ```text
 QA_AUTO_Quality/
 ├─ docs/                         # 프로젝트 인수인계와 날짜별 작업일지
-│  └─ test-cases/                # 전체 TC 목록과 실행 이력 CSV
 ├─ logs/test-errors/             # 실패 테스트 전용 로그(생성 로그는 Git 제외)
 ├─ reporters/                    # Playwright 커스텀 리포터
 ├─ tests/
 │  ├─ modules/<menu>/            # 메뉴별 Page / Flow / Spec
+│  ├─ test-cases/                # 전체 TC 목록과 실행 이력 CSV
 │  ├─ test-data/                 # 메뉴별 자동화 입력값·검증값 YAML
 │  ├─ support/                   # 공통 데이터 로더와 유틸리티
 │  └─ fixtures.ts                # 공통 Playwright fixture
@@ -48,7 +48,7 @@ QA_AUTO_Quality/
 
 새 메뉴는 `tests/modules/<menu>/`에 `<menu>.page.ts`, `<menu>.flow.ts`,
 `<menu>.spec.ts`를 한 묶음으로 추가합니다. TC 정의와 실행 이력은
-`docs/test-cases/qa-test-cases.csv`, 비민감 자동화 입력값과 검증값은
+`tests/test-cases/qa-test-cases.csv`, 비민감 자동화 입력값과 검증값은
 `tests/test-data/<menu>.yml`에서 관리합니다.
 
 로그인 TC 실행 전에는 `PLAYWRIGHT_LOGIN_URL`, `PLAYWRIGHT_USERNAME`,
