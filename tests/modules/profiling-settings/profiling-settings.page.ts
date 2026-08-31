@@ -37,7 +37,7 @@ export class ProfilingSettingsPage {
   }
 
   get tableTab() {
-    return this.page.getByRole('tab', { name: '테이블' });
+    return this.region.getByRole('tab', { name: '테이블' });
   }
 
   get searchButton() {
@@ -45,23 +45,23 @@ export class ProfilingSettingsPage {
   }
 
   get rows() {
-    return this.page.locator('#tableProfilingGrid .slick-row');
+    return this.region.locator('#tableProfilingGrid .slick-row');
   }
 
   get basicInfoTab() {
-    return this.page.getByRole('tab', { name: '기본정보' });
+    return this.region.getByRole('tab', { name: '기본정보' });
   }
 
   get columnsTab() {
-    return this.page.getByRole('tab', { name: '컬럼' });
+    return this.region.getByRole('tab', { name: '컬럼' });
   }
 
   get tableExecutionCheckbox() {
-    return this.page.locator('#basicInfo input[name="executeTabYn"]');
+    return this.region.locator('#basicInfo input[name="executeTabYn"]');
   }
 
   get columnRows() {
-    return this.page.locator('#columnsGrid .slick-row');
+    return this.region.locator('#columnsGrid .slick-row');
   }
 
   async open() {
@@ -132,10 +132,10 @@ export class ProfilingSettingsPage {
   }
 
   rowByTableId(tableId: string) {
-    const idCell = this.page.locator('.slick-cell.l9.r9').filter({
+    const idCell = this.region.locator('.slick-cell.l9.r9').filter({
       hasText: new RegExp(`^${escapeRegExp(tableId)}$`)
     });
-    return this.page.locator('#tableProfilingGrid .slick-row').filter({ has: idCell });
+    return this.region.locator('#tableProfilingGrid .slick-row').filter({ has: idCell });
   }
 
   async selectTarget(target: ProfilingTarget) {
@@ -144,7 +144,7 @@ export class ProfilingSettingsPage {
       await checkbox.click();
     }
 
-    const openDetailsButton = this.page.locator('.ui-layout-toggler-south[title="Open"]');
+    const openDetailsButton = this.region.locator('.ui-layout-toggler-south[title="Open"]');
     if (await openDetailsButton.isVisible()) {
       await openDetailsButton.click();
     }
@@ -155,7 +155,7 @@ export class ProfilingSettingsPage {
       await dialog.accept();
     };
     this.page.once('dialog', acceptDialog);
-    await this.page.locator(buttonSelector).click();
+    await this.region.locator(buttonSelector).click();
     await this.page.waitForTimeout(300);
     this.page.off('dialog', acceptDialog);
   }
@@ -188,7 +188,7 @@ export class ProfilingSettingsPage {
     }
     await checkbox.click();
 
-    const openDetailsButton = this.page.locator('.ui-layout-toggler-south[title="Open"]');
+    const openDetailsButton = this.region.locator('.ui-layout-toggler-south[title="Open"]');
     if (await openDetailsButton.isVisible()) {
       await openDetailsButton.click();
     }
@@ -198,12 +198,12 @@ export class ProfilingSettingsPage {
     await this.columnsTab.click();
     await this.columnRows.first().waitFor({ state: 'visible' });
 
-    const selectAll = this.page.locator('#columnsGrid .slick-header input.select-all');
+    const selectAll = this.region.locator('#columnsGrid .slick-header input.select-all');
     await selectAll.nth(0).setChecked(true);
     await selectAll.nth(1).setChecked(true);
 
-    const executionCheckboxes = this.page.locator('#columnsGrid input[name="executeYn"]');
-    const columnCheckboxes = this.page.locator('#columnsGrid input[name="columnYn"]');
+    const executionCheckboxes = this.region.locator('#columnsGrid input[name="executeYn"]');
+    const columnCheckboxes = this.region.locator('#columnsGrid input[name="columnYn"]');
     const executionStates = await executionCheckboxes.evaluateAll((checkboxes) =>
       checkboxes.map((checkbox) => (checkbox as HTMLInputElement).checked));
     const columnStates = await columnCheckboxes.evaluateAll((checkboxes) =>

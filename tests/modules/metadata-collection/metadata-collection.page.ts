@@ -18,6 +18,10 @@ function escapeRegExp(value: string) {
 export class MetadataCollectionPage {
   constructor(private readonly page: Page) {}
 
+  get region() {
+    return this.page.locator('#metaDataRegion');
+  }
+
   get targetManagementMenu() {
     return this.page.locator('a.menu-item').filter({ hasText: '검증대상관리' });
   }
@@ -27,31 +31,31 @@ export class MetadataCollectionPage {
   }
 
   get metadataCollectionTab() {
-    return this.page.getByRole('tab', { name: '메타데이터수집관리' });
+    return this.region.getByRole('tab', { name: '메타데이터수집관리' });
   }
 
   get reservationNameCells() {
-    return this.page.locator('#metaDataGrid .slick-cell.l3.r3');
+    return this.region.locator('#metaDataGrid .slick-cell.l3.r3');
   }
 
   get newButton() {
-    return this.page.getByRole('button', { name: /신규$/ });
+    return this.region.getByRole('button', { name: /신규$/ });
   }
 
   get immediateRunButton() {
-    return this.page.getByRole('button', { name: /즉시실행$/ });
+    return this.region.getByRole('button', { name: /즉시실행$/ });
   }
 
   get searchButton() {
-    return this.page.locator('#metaDataSearch').getByRole('button', { name: '검색', exact: true });
+    return this.region.locator('#metaDataSearch').getByRole('button', { name: '검색', exact: true });
   }
 
   get collectionHistoryTab() {
-    return this.page.getByRole('tab', { name: '수집이력' });
+    return this.region.getByRole('tab', { name: '수집이력' });
   }
 
   get collectionHistoryRows() {
-    return this.page.locator('#cltnHistoryGrid .slick-row');
+    return this.region.locator('#cltnHistoryGrid .slick-row');
   }
 
   get latestCollectionHistoryStatus() {
@@ -161,8 +165,8 @@ export class MetadataCollectionPage {
 
   reservationRow(reservationName: string) {
     const exactName = new RegExp(`^${escapeRegExp(reservationName)}$`);
-    const nameCell = this.page.locator('.slick-cell.l3.r3').filter({ hasText: exactName });
-    return this.page.locator('#metaDataGrid .slick-row').filter({ has: nameCell });
+    const nameCell = this.region.locator('.slick-cell.l3.r3').filter({ hasText: exactName });
+    return this.region.locator('#metaDataGrid .slick-row').filter({ has: nameCell });
   }
 
   reservationStatus(reservationName: string) {
@@ -195,17 +199,17 @@ export class MetadataCollectionPage {
   }
 
   async openCollectionHistory() {
-    const openDetailsButton = this.page.locator('.ui-layout-toggler-south[title="Open"]');
+    const openDetailsButton = this.region.locator('.ui-layout-toggler-south[title="Open"]');
     if (await openDetailsButton.isVisible()) {
       await openDetailsButton.click();
     }
 
     await this.collectionHistoryTab.click();
-    await this.page.locator('#cltnHistory').waitFor({ state: 'visible' });
+    await this.region.locator('#cltnHistory').waitFor({ state: 'visible' });
   }
 
   async closeDetails() {
-    const closeDetailsButton = this.page.locator('.ui-layout-toggler-south[title="Close"]');
+    const closeDetailsButton = this.region.locator('.ui-layout-toggler-south[title="Close"]');
     if (await closeDetailsButton.isVisible()) {
       await closeDetailsButton.click();
     }

@@ -38,7 +38,7 @@ export class VerificationTargetPage {
   }
 
   get verificationTargetTab() {
-    return this.page.getByRole('tab', { name: '검증대상관리' });
+    return this.region.getByRole('tab', { name: '검증대상관리' });
   }
 
   get additionalFilterButton() {
@@ -50,11 +50,11 @@ export class VerificationTargetPage {
   }
 
   get rows() {
-    return this.page.locator('#vrfcTrgtMngtGrid .slick-row');
+    return this.region.locator('#vrfcTrgtMngtGrid .slick-row');
   }
 
   get reflectButton() {
-    return this.page.locator('#inspectionSubjectBundleReflect');
+    return this.region.locator('#inspectionSubjectBundleReflect');
   }
 
   get registrationDialog() {
@@ -123,10 +123,10 @@ export class VerificationTargetPage {
   }
 
   rowByTableId(tableId: string) {
-    const idCell = this.page.locator('.slick-cell.l11.r11').filter({
+    const idCell = this.region.locator('.slick-cell.l11.r11').filter({
       hasText: new RegExp(`^${escapeRegExp(tableId)}$`)
     });
-    return this.page.locator('#vrfcTrgtMngtGrid .slick-row').filter({ has: idCell });
+    return this.region.locator('#vrfcTrgtMngtGrid .slick-row').filter({ has: idCell });
   }
 
   async selectCandidates(candidates: Candidate[]) {

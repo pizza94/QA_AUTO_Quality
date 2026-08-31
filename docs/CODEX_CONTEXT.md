@@ -19,6 +19,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - Visible UI demonstrations must use `npm.cmd run test:headed`. The full procedure uses one browser page and session, logs in only in TC-001, and runs later TC steps from the preceding state without replaying earlier steps; do not directly operate the user's visible browser for test execution or inspection.
 - Every newly added TC must also be appended as a TC-ordered `test.step` in `tests/procedures/full-quality-procedure.spec.ts`, keeping `test:headed` complete while preserving the single-session procedure.
 - QualityStream retains prior menu DOM and query state. Menu flows must click the active menu's scoped search button once after entry and scope duplicate IDs and filters to that menu region.
+- All menu-owned controls, grids, tabs, filters, buttons, and detail panels are scoped to their active region; only global navigation and modal dialogs remain page-scoped.
 - Sequential menu navigation must click a visible target submenu directly and expand the parent only when that submenu is hidden, avoiding accidental collapse of an already open menu.
 - Work is recorded by date under `docs/work-log/YYYY-MM-DD.md`.
 - Automation is modularized per QualityStream menu under `tests/modules/<menu>/` using page, flow, and spec responsibilities.

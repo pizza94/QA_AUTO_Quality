@@ -16,6 +16,7 @@
 - Use each TC-specific command for isolated headless execution. Launch visible UI only with `npm.cmd run test:headed`; the full procedure must use one browser page and session, log in only in TC-001, and let every later TC continue from the preceding TC without replaying earlier steps.
 - Whenever a TC is added, add its own `test.step` to `tests/procedures/full-quality-procedure.spec.ts` in TC order so `test:headed` always covers the complete procedure.
 - QualityStream keeps prior menu DOM and query state. After entering a menu that has a search button, click that menu's scoped search button once to initialize its data, and scope duplicate IDs and filters to the active menu region.
+- Scope every menu-owned control, grid, tab, filter, button, and detail-panel locator to that menu's active region; keep only global navigation and modal dialogs at page scope.
 - In sequential execution, do not toggle an already expanded parent menu. Click the target submenu directly when it is visible; expand its parent only when the submenu is hidden.
 - The user has pre-approved headless immediate execution of the latest `수집테스트자동N` metadata-collection reservation. Do not ask again unless the target, scope, or side effect changes; allow up to five minutes for collection-status verification.
 - Update `docs/CODEX_CONTEXT.md` after meaningful decisions or blockers.
