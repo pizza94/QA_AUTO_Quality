@@ -1,0 +1,2 @@
+﻿"TC ID","대메뉴","메뉴","검증영역","검증항목","사전조건","테스트절차","테스트데이터","기대결과","자동화파일","실행명령","최근실행일","결과","비고"
+"TC-LOGIN-001","공통","IRUDA 로그인","로그인","유효한 계정 로그인 성공","PLAYWRIGHT_LOGIN_URL, PLAYWRIGHT_USERNAME, PLAYWRIGHT_PASSWORD 설정","로그인 페이지 진입 > 사용자ID/비밀번호 입력 > Login 클릭 > Data Portal 진입 확인","tests/test-data/login.yml 및 런타임 환경변수","로그인 화면이 사라지고 Welcome to Data Portal 표시","tests/modules/login/login.spec.ts","npm run test:login","2026-08-31","PASS","실제 브라우저에서 로그인 및 Data Portal 홈 진입 확인"
