@@ -5,8 +5,8 @@ purpose: 대화 기억 없이 이 파일과 연결된 원본만으로 장기간 
 
 currentState:
   branch: main
-  completedTc: TC-001 ~ TC-008
-  implementedTc: TC-001 ~ TC-008
+  completedTc: TC-001 ~ TC-009
+  implementedTc: TC-001 ~ TC-009
   executionMode: 하나의 브라우저 페이지와 세션을 사용하는 순차 절차
   nextAction: TC-001 ~ TC-007 전체 절차 재검증
 
@@ -64,6 +64,8 @@ invariants:
   - 전체 절차 전에 관련 개별 TC를 우선 검증하고 문서 업데이트는 의미 있는 작업 단위로 묶는다.
 
   - TC-008 uses the TC-006 column IDs, searches execution history Y, applies a mapping rule inferred from column name and data type, falls back to 숫자완성 테스트, and reruns all target columns.
+
+  - TC-009 registers an incrementally named Column profiling inspection job using the TC-006 table ID, then returns to inspection work management and verifies it by exact job-name search.
 
 versionPolicy:
   source: package.json

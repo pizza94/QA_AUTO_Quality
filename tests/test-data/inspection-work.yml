@@ -1,0 +1,7 @@
+input:
+  jobNamePrefix: 프로파일링점검
+  verificationType: Column
+  description: 자동화테스트
+  system: 큐에이
+  business: QA상품
+  exactTableSearchOption: '='

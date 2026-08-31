@@ -25,6 +25,8 @@ import type {
   ColumnAnalysisInput,
   MappingRuleInput
 } from '../modules/column-analysis/column-analysis.page';
+import { registerProfilingInspectionWork } from '../modules/inspection-work/inspection-work.flow';
+import type { InspectionWorkInput } from '../modules/inspection-work/inspection-work.page';
 
 type LoginData = {
   credentials: LoginEnvironmentReferences;
@@ -56,6 +58,9 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
     input: ColumnAnalysisInput;
     mappingRule: MappingRuleInput;
   }>('column-analysis.yml');
+  const inspectionWorkData = await loadTestData<{ input: InspectionWorkInput }>(
+    'inspection-work.yml'
+  );
 
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');
   test.setTimeout(collectionData.immediateExecution.completionTimeoutMs + 180000);
@@ -168,5 +173,15 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
       profilingColumns
     );
     expect(applied).toHaveLength(profilingColumns.length);
+  });
+
+  await test.step('TC-009 프로파일링 점검작업 등록 및 조회', async () => {
+    if (!profilingTarget) throw new Error('TC-006 프로파일링 대상 정보가 없습니다.');
+    const { workPage, jobName } = await registerProfilingInspectionWork(
+      page,
+      inspectionWorkData.input,
+      profilingTarget
+    );
+    await expect(workPage.jobRow(jobName)).toContainText(jobName);
   });
 });
