@@ -5,6 +5,7 @@
   "scripts": {
     "test": "playwright test",
     "test:chromium": "playwright test --project=chromium --workers=1",
+    "test:login": "playwright test tests/modules/login/login.spec.ts --project=chromium --workers=1",
     "test:headed": "playwright test --project=chromium --headed --workers=1",
     "test:ui": "playwright test --ui",
     "test:list": "playwright test --list",

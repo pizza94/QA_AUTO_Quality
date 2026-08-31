@@ -6,7 +6,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 
 - Local repository: `C:\Users\HSJ\Documents\QA_AUTO_퀄리티`
 - Purpose: Playwright-based web UI QA automation for the QualityStream product.
-- Target URL: not configured yet; set `PLAYWRIGHT_BASE_URL` locally.
+- Target login URL has been supplied but must remain runtime-only in `PLAYWRIGHT_LOGIN_URL`.
 
 ## Current state
 
@@ -22,7 +22,9 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - The initial smoke test is organized under `tests/modules/smoke/` with separate page, flow, and spec files as the reference module layout.
 - GitHub target repository: `https://github.com/pizza94/QA_AUTO_Quality` (`origin`).
 - Local `main` tracks `origin/main`; the organized project scaffold has been pushed successfully.
+- The first business flow is login (`TC-LOGIN-001`) under `tests/modules/login/`; credentials are read only from runtime environment variables.
+- Live login was verified successfully: the login form disappears, the URL leaves the login route, and the Data Portal welcome heading becomes visible.
 
 ## Next action
 
-- Configure the real QualityStream target URL and identify the first business-critical sequential test flow.
+- Identify the first post-login menu flow and its TC list.

@@ -11,16 +11,18 @@ QualityStream의 TC를 `화면 진입 → 값 입력 → 실행 → 결과 검�
 npm install
 npm.cmd exec playwright install chromium
 $env:PLAYWRIGHT_BASE_URL = 'https://target.example'
+$env:PLAYWRIGHT_LOGIN_URL = 'https://target.example/login'
 npm.cmd run test:chromium
 ```
 
 로그인 정보가 필요한 경우 `PLAYWRIGHT_USERNAME`, `PLAYWRIGHT_PASSWORD` 환경변수를 사용합니다.
-실제 값이 들어간 `.env` 파일이나 자격증명은 Git에 커밋하지 않습니다.
+실제 URL·자격증명이 들어간 `.env` 파일이나 설정은 Git에 커밋하지 않습니다.
 
 ## 주요 명령
 
 - `npm test`: 전체 테스트
 - `npm run test:chromium`: Chromium 단일 워커 실행
+- `npm run test:login`: 환경변수로 제공한 계정의 로그인 TC
 - `npm run test:headed`: 브라우저가 보이는 상태로 실행
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서
@@ -46,3 +48,7 @@ QA_AUTO_Quality/
 새 메뉴는 `tests/modules/<menu>/`에 `<menu>.page.ts`, `<menu>.flow.ts`,
 `<menu>.spec.ts`를 한 묶음으로 추가합니다. 비민감 TC 데이터는 동일한 메뉴명으로
 `test-data/<menu>/`에 저장합니다.
+
+로그인 TC 실행 전에는 `PLAYWRIGHT_LOGIN_URL`, `PLAYWRIGHT_USERNAME`,
+`PLAYWRIGHT_PASSWORD`를 현재 터미널 세션의 환경변수로 설정합니다. 실제 URL과
+자격증명은 저장소 파일에 기록하지 않습니다.
