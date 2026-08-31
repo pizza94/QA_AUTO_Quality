@@ -34,7 +34,7 @@ npm.cmd run test:chromium
 - `npm.cmd run test:headed`: 하나의 브라우저 세션에서 로그인은 한 번만 하고 전체 TC를 절차대로 이어서 실행하는 UI 화면 시연 전용 명령(실제 등록·수집·반영·저장 작업 수행)
 
 새 TC는 개별 spec과 함께 `tests/procedures/full-quality-procedure.spec.ts`에 TC 번호순 `test.step`으로 추가하여 전체 시연에도 항상 포함합니다.
-CSV와 전체 절차가 다르면 사전점검 단계에서 실행을 차단합니다. 장기 재실행 구조와 버전 정책은 `docs/AUTOMATION_STRUCTURE.md`, 버전 변경 내역은 `CHANGELOG.md`에서 관리합니다.
+CSV와 전체 절차가 다르면 사전점검 단계에서 실행을 차단합니다. 새 대화나 장기간 중단 후에는 단일 기준 파일 `tests/test-context/project-context.yml`부터 확인합니다. 실행 구조·재시작 절차·원본 경로·불변 규칙·버전 정책을 이 파일에서 통합 관리하며, 사전점검이 파일 경로와 자동화 버전을 확인합니다. 버전 변경 이력은 `CHANGELOG.md`에 남깁니다.
 
 전체 실행마다 자동화 버전과 Git 커밋을 `logs/test-runs/YYYY-MM-DD/*.json`에 로컬 기록하며 Git에는 올리지 않습니다.
 - `npm run test:ui`: Playwright UI 모드

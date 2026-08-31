@@ -1,0 +1,66 @@
+schemaVersion: 1
+automationVersion: 0.3.0
+suiteName: QualityStream 전체 절차
+purpose: 대화 기억 없이 이 파일과 연결된 원본만으로 장기간 뒤에도 같은 테스트 절차를 재현한다.
+
+currentState:
+  branch: main
+  completedTc: TC-001 ~ TC-006
+  executionMode: 하나의 브라우저 페이지와 세션을 사용하는 순차 절차
+  nextAction: 전체 절차 재검증 후 다음 TC 정의
+
+readOrder:
+  - tests/test-context/project-context.yml
+  - tests/test-cases/qa-test-cases.csv
+  - tests/procedures/full-quality-procedure.spec.ts
+
+sources:
+  testCases: tests/test-cases/qa-test-cases.csv
+  fullProcedure: tests/procedures/full-quality-procedure.spec.ts
+  testDataDirectory: tests/test-data
+  moduleDirectory: tests/modules
+  workLogDirectory: docs/work-log
+  changelog: CHANGELOG.md
+
+commands:
+  preflight: npm.cmd run preflight
+  headlessProcedure: npm.cmd run test:procedure
+  visibleProcedure: npm.cmd run test:headed
+
+restartProcedure:
+  - 이 파일을 읽고 Git 브랜치와 변경 상태를 확인한다.
+  - qa-test-cases.csv와 전체 절차 spec의 TC 순서와 현재 요구사항을 확인한다.
+  - 관련 TC의 YAML과 메뉴 모듈을 확인한다.
+  - npm.cmd run preflight를 실행한다.
+  - 기본 검증은 npm.cmd run test:procedure로 백그라운드 실행한다.
+  - 사용자가 명시한 경우에만 npm.cmd run test:headed로 화면을 표시한다.
+  - 결과에 따라 이 파일의 currentState와 날짜별 작업일지를 갱신한다.
+
+invariants:
+  - 전체 절차는 하나의 브라우저 페이지와 세션을 사용한다.
+  - 로그인은 TC-001에서 한 번만 수행한다.
+  - 이후 TC는 이전 TC의 완료 상태를 이어받고 이전 절차를 반복하지 않는다.
+  - 메뉴 진입 후 해당 메뉴 영역의 검색 버튼을 한 번 눌러 데이터를 초기 조회한다.
+  - 메뉴 소속 선택자는 활성 메뉴 영역으로 제한한다.
+  - 보이는 하위 메뉴는 바로 클릭하고 숨겨진 경우에만 대메뉴를 펼친다.
+  - CSV TC ID와 전체 절차 test.step ID의 구성과 순서는 같아야 한다.
+  - 새 TC는 CSV·YAML·메뉴 모듈·개별 spec·전체 절차에 함께 추가한다.
+  - 실제 접속정보가 있는 local YAML은 Git에 커밋하지 않는다.
+  - UI 화면은 사용자가 명시적으로 요청한 경우에만 표시한다.
+  - 생성된 실패 로그와 실행 메타데이터는 Git에 커밋하지 않는다.
+
+versionPolicy:
+  source: package.json
+  history: CHANGELOG.md와 Git 커밋 및 릴리스 태그
+  patch: TC 의미가 바뀌지 않는 선택자·대기조건 수정
+  minor: 새 TC·메뉴·검사 기능 추가
+  major: 전체 절차나 데이터 구조의 호환 불가 변경
+
+runRecords:
+  failureLogs: logs/test-errors/YYYY-MM-DD/*.log
+  metadata: logs/test-runs/YYYY-MM-DD/*.json
+  metadataFields:
+    - automationVersion
+    - gitCommit
+    - status
+    - tests

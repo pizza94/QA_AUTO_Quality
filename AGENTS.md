@@ -3,7 +3,7 @@
 - Communicate primarily in concise Korean and lead with the result.
 - Report work results as natural prose without diff statistics such as `(+1 -0)`, file-by-file change lists, tables, or patch details unless the user explicitly requests them.
 - Read `docs/CODEX_CONTEXT.md` and check Git status before meaningful work.
-- Before changing or running tests, read in order: `docs/CODEX_CONTEXT.md`, `tests/test-cases/qa-test-cases.csv`, relevant `tests/test-data/*.yml`, and `tests/procedures/full-quality-procedure.spec.ts`.
+- Before changing or running tests, use `tests/test-context/project-context.yml` as the single authoritative execution context, follow its `readOrder`, and inspect only the relevant test-data and module files for the requested TC.
 - Load the login URL and credentials from the Git-ignored local YAML referenced by `tests/test-data/login.yml`. Never commit the populated local YAML or real secrets.
 - Prefer focused Chromium tests during development and expand browser coverage only when requested.
 - Preserve unrelated user changes.
@@ -22,5 +22,5 @@
 - In sequential execution, do not toggle an already expanded parent menu. Click the target submenu directly when it is visible; expand its parent only when the submenu is hidden.
 - The user has pre-approved headless immediate execution of the latest `수집테스트자동N` metadata-collection reservation. Do not ask again unless the target, scope, or side effect changes; allow up to five minutes for collection-status verification.
 - Update `docs/CODEX_CONTEXT.md` after meaningful decisions or blockers.
-- Use the `package.json` SemVer as the automation version, document version changes in `CHANGELOG.md`, and use Git commits/tags as the authoritative history. Do not create copied version files.
+- Keep execution structure, restart steps, invariants, source paths, and version policy centralized in `tests/test-context/project-context.yml`. Use `package.json` SemVer, `CHANGELOG.md`, and Git commits/tags for version history; do not create copied context or version files.
 - Keep generated run metadata under `logs/test-runs/YYYY-MM-DD/`; do not commit it. Each run must record the automation version and Git commit without secrets.

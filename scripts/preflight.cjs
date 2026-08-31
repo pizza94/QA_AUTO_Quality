@@ -7,9 +7,20 @@ const { chromium } = require('@playwright/test');
 const root = path.resolve(__dirname, '..');
 const testDataRoot = path.join(root, 'tests', 'test-data');
 const packageData = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
+const contextPath = path.join(root, 'tests', 'test-context', 'project-context.yml');
 
 function requireValue(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+requireValue(existsSync(contextPath), '테스트 실행 컨텍스트가 없습니다.');
+const context = parseYaml(readFileSync(contextPath, 'utf8'));
+requireValue(context?.automationVersion === packageData.version, '컨텍스트와 package.json 버전이 다릅니다.');
+for (const relativePath of context?.readOrder ?? []) {
+  requireValue(existsSync(path.resolve(root, relativePath)), `컨텍스트 필수 파일이 없습니다: ${relativePath}`);
+}
+for (const relativePath of Object.values(context?.sources ?? {})) {
+  requireValue(typeof relativePath === 'string' && existsSync(path.resolve(root, relativePath)), `컨텍스트 원본 경로가 없습니다: ${relativePath}`);
 }
 
 for (const filename of readdirSync(testDataRoot).filter((name) => /\.ya?ml$/i.test(name))) {
