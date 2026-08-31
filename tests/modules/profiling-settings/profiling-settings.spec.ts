@@ -13,7 +13,7 @@ type ProfilingSettingsTestData = {
 };
 
 test('TC-006 최근 반영 테이블 1건과 모든 컬럼의 프로파일링 실행을 설정한다', async ({ page }) => {
-  test.setTimeout(30000);
+  test.setTimeout(45000);
   const loginData = await loadTestData<LoginTestData>('login.yml');
   const profilingData = await loadTestData<ProfilingSettingsTestData>('profiling-settings.yml');
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');

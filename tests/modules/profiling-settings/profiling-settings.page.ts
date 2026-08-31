@@ -159,6 +159,18 @@ export class ProfilingSettingsPage {
     await this.save('#saveProfilingTable');
   }
 
+  async reloadAndVerifyTableExecution(target: ProfilingTarget, input: ProfilingSettingsInput) {
+    await this.page.reload();
+    await this.tableTab.waitFor({ state: 'visible' });
+    await this.search(input);
+    await this.rowByTableId(target.tableId).waitFor({ state: 'visible' });
+    await this.selectTarget(target);
+    await this.basicInfoTab.click();
+    if (!(await this.tableExecutionCheckbox.isChecked())) {
+      throw new Error(`Table execution checkbox was not retained after reload: ${target.tableId}`);
+    }
+  }
+
   async reselectTarget(target: ProfilingTarget) {
     await this.page.locator('#tableExeYN').selectOption({ label: '전체' });
     await this.searchButton.click();
@@ -196,13 +208,27 @@ export class ProfilingSettingsPage {
     await this.save('#saveColumns');
   }
 
-  async verifySaved(target: ProfilingTarget, input: ProfilingSettingsInput) {
-    await this.reselectTarget(target);
+  async reloadAndVerifyColumns(target: ProfilingTarget, input: ProfilingSettingsInput) {
+    await this.page.reload();
+    await this.tableTab.waitFor({ state: 'visible' });
+    await this.search(input);
     const row = this.rowByTableId(target.tableId);
     await row.waitFor({ state: 'visible' });
     const executionStatus = (await row.locator('.slick-cell.l16.r16').innerText()).trim();
     if (executionStatus !== input.expectedExecutionStatus) {
       throw new Error(`Unexpected table execution status: ${executionStatus}`);
+    }
+
+    await this.selectTarget(target);
+    await this.columnsTab.click();
+    await this.columnRows.first().waitFor({ state: 'visible', timeout: 10000 });
+    const saved = await this.columnRows.evaluateAll((rows) => rows.every((columnRow) => {
+      const execution = columnRow.querySelector<HTMLInputElement>('input[name="executeYn"]');
+      const column = columnRow.querySelector<HTMLInputElement>('input[name="columnYn"]');
+      return execution?.checked === true && column?.checked === true;
+    }));
+    if (!saved) {
+      throw new Error(`Column profiling checkboxes were not retained after reload: ${target.tableId}`);
     }
   }
 }

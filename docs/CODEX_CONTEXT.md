@@ -38,7 +38,7 @@ Last updated: 2026-08-31 (Asia/Seoul)
 - The user pre-approved repeated headless TC-004 execution without reconfirmation; status verification may wait up to five minutes because duration varies with data volume.
 - `TC-005` filters unreflected DBCatalog 신규 rows for ORA19C/META42_DEV with blank system/business values, selects the visually top one row by grid position, and reflects it to 큐에이/QA상품.
 - The earlier two-row version passed and reflected BAZ06B and BILLING_BASIC_INFO. The updated one-row version also passed headless Chromium after the requirement change.
-- `TC-006` selects only the single most recently reflected 큐에이/QA상품 ORA19C/META42_DEV table, enables table execution, enables execution and column profiling for all of its columns, saves both stages, and verifies the table execution status. It passed headless Chromium in 12.5 seconds.
+- `TC-006` selects only the single most recently reflected 큐에이/QA상품 ORA19C/META42_DEV table. It reloads after each save to verify the table execution checkbox and every column's execution/column checkbox remain selected in the UI.
 
 ## Next action
 
