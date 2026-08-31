@@ -1,0 +1,16 @@
+expected:
+  pageTitle: QualityStream 4.3
+  urlContains: /quality_woori/main#dashboard
+  primaryMenus:
+    - 검증기준관리
+    - 검증대상관리
+    - 구조품질
+    - 프로파일링설정
+    - 프로파일링
+    - 품질진단관리
+    - 작업관리
+    - 작업결과
+    - 개선관리
+    - 품질현황
+    - 승인관리
+    - 설정

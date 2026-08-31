@@ -11,7 +11,7 @@ type LoginTestData = {
   };
 };
 
-test('TC-LOGIN-001 유효한 계정으로 로그인한다', async ({ page }) => {
+test('TC-001 유효한 계정으로 로그인한다', async ({ page }) => {
   const data = await loadTestData<LoginTestData>('login.yml');
   test.skip(!hasLoginEnvironment(data.credentials), '로그인 환경변수가 설정되지 않았습니다.');
 

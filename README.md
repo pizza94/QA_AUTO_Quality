@@ -23,6 +23,7 @@ npm.cmd run test:chromium
 - `npm test`: 전체 테스트
 - `npm run test:chromium`: Chromium 단일 워커 실행
 - `npm run test:login`: 환경변수로 제공한 계정의 로그인 TC
+- `npm run test:quality`: 로그인 후 QualityStream 진입 TC
 - `npm run test:headed`: 브라우저가 보이는 상태로 실행
 - `npm run test:ui`: Playwright UI 모드
 - `npm run report`: HTML 결과 보고서
