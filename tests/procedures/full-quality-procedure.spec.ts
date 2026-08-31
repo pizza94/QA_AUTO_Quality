@@ -44,7 +44,7 @@ type CollectionData = {
     runningStatus: string;
     completedStatus: string;
     completionTimeoutMs: number;
-    apiPollIntervalMs: number;
+    uiPollIntervalMs: number;
   };
 };
 
@@ -101,15 +101,12 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
     const historyCountBefore = await collectionPage.collectionHistoryRows.count();
     await collectionPage.closeDetails();
     await collectionPage.runImmediately();
-    const statusRequest = await collectionPage.captureStatusRequest(reservationName);
-    await collectionPage.waitForStatusViaApi(
-      statusRequest,
+    await collectionPage.waitForStatusViaSearch(
       reservationName,
       collectionData.immediateExecution.completedStatus,
       collectionData.immediateExecution.completionTimeoutMs,
-      collectionData.immediateExecution.apiPollIntervalMs
+      collectionData.immediateExecution.uiPollIntervalMs
     );
-    await collectionPage.refreshList();
     await expect(collectionPage.reservationStatus(reservationName)).toHaveText(
       collectionData.immediateExecution.completedStatus
     );

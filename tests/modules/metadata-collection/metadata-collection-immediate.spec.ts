@@ -13,7 +13,7 @@ type ImmediateExecutionTestData = {
     runningStatus: string;
     completedStatus: string;
     completionTimeoutMs: number;
-    apiPollIntervalMs: number;
+    uiPollIntervalMs: number;
   };
 };
 
@@ -30,15 +30,12 @@ test('TC-004 최신 메타데이터 수집 예약을 즉시실행한다', async 
       collectionData.immediateExecution.reservationNamePrefix
     );
 
-  const statusRequest = await metadataCollectionPage.captureStatusRequest(reservationName);
-  await metadataCollectionPage.waitForStatusViaApi(
-    statusRequest,
+  await metadataCollectionPage.waitForStatusViaSearch(
     reservationName,
     collectionData.immediateExecution.completedStatus,
     collectionData.immediateExecution.completionTimeoutMs,
-    collectionData.immediateExecution.apiPollIntervalMs
+    collectionData.immediateExecution.uiPollIntervalMs
   );
-  await metadataCollectionPage.refreshList();
   await expect(metadataCollectionPage.reservationStatus(reservationName)).toHaveText(
     collectionData.immediateExecution.completedStatus
   );

@@ -13,4 +13,4 @@ immediateExecution:
   runningStatus: 수집중
   completedStatus: 완료
   completionTimeoutMs: 300000
-  apiPollIntervalMs: 10000
+  uiPollIntervalMs: 10000

@@ -11,14 +11,6 @@ export type MetadataCollectionInput = {
   minute: string;
 };
 
-type StatusRequest = {
-  url: string;
-  method: string;
-  headers: Record<string, string>;
-  postData: string | null;
-  initialBody: string;
-};
-
 function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -208,94 +200,25 @@ export class MetadataCollectionPage {
     await this.reservationNameCells.first().waitFor({ state: 'visible' });
   }
 
-  async captureStatusRequest(reservationName: string): Promise<StatusRequest> {
-    let resolveRequest!: (request: StatusRequest) => void;
-    const captured = new Promise<StatusRequest>((resolve) => {
-      resolveRequest = resolve;
-    });
-
-    const onResponse = async (response: import('@playwright/test').Response) => {
-      const request = response.request();
-      if (!['xhr', 'fetch'].includes(request.resourceType()) || !response.ok()) return;
-      const body = await response.text().catch(() => '');
-      if (!body.includes(reservationName)) return;
-      const headers = Object.fromEntries(Object.entries(request.headers()).filter(([name]) => ![
-        'content-length', 'cookie', 'host', 'origin', 'referer', 'user-agent', 'accept-encoding'
-      ].includes(name) && !name.startsWith('sec-')));
-      resolveRequest({
-        url: request.url(),
-        method: request.method(),
-        headers,
-        postData: request.postData(),
-        initialBody: body
-      });
-    };
-
-    this.page.on('response', onResponse);
-    try {
-      await this.refreshList();
-      return await Promise.race([
-        captured,
-        new Promise<never>((_, reject) => setTimeout(
-          () => reject(new Error('수집상태 조회 API 요청을 찾지 못했습니다.')),
-          15000
-        ))
-      ]);
-    } finally {
-      this.page.off('response', onResponse);
-    }
-  }
-
-  private responseHasStatus(body: string, reservationName: string, status: string) {
-    try {
-      const containsMatch = (value: unknown): boolean => {
-        if (Array.isArray(value)) return value.some(containsMatch);
-        if (value && typeof value === 'object') {
-          const values = Object.values(value);
-          const directText = values
-            .filter((item) => item === null || ['string', 'number', 'boolean'].includes(typeof item))
-            .join(' ');
-          if (directText.includes(reservationName) && directText.includes(status)) return true;
-          return values.some(containsMatch);
-        }
-        return false;
-      };
-      return containsMatch(JSON.parse(body));
-    } catch {
-      const index = body.indexOf(reservationName);
-      return index >= 0 && body.slice(index, index + 2000).includes(status);
-    }
-  }
-
-  async waitForStatusViaApi(
-    request: StatusRequest,
+  async waitForStatusViaSearch(
     reservationName: string,
     completedStatus: string,
     timeoutMs: number,
     intervalMs: number
   ) {
     const startedAt = Date.now();
-    let body = request.initialBody;
+    let lastStatus = '';
 
-    while (true) {
-      if (this.responseHasStatus(body, reservationName, completedStatus)) return;
-      if (Date.now() - startedAt >= timeoutMs) {
-        throw new Error(`수집상태 API가 제한시간 안에 완료되지 않았습니다: ${reservationName}`);
-      }
-
+    while (Date.now() - startedAt < timeoutMs) {
       await this.page.waitForTimeout(intervalMs);
-      const response = await this.page.request.fetch(request.url, {
-        method: request.method,
-        headers: request.headers,
-        data: request.postData ?? undefined,
-        failOnStatusCode: false,
-        timeout: 30000
-      });
-      if (!response.ok()) {
-        throw new Error(`수집상태 API 응답 오류: HTTP ${response.status()}`);
-      }
-      body = await response.text();
+      await this.refreshList();
+      lastStatus = (await this.reservationStatus(reservationName).textContent())?.trim() ?? '';
+      if (lastStatus === completedStatus) return;
     }
+
+    throw new Error(
+      `수집상태가 제한시간 안에 완료되지 않았습니다: ${reservationName} (마지막 상태: ${lastStatus || '확인 불가'})`
+    );
   }
 
   async openCollectionHistory() {
@@ -306,6 +229,10 @@ export class MetadataCollectionPage {
 
     await this.collectionHistoryTab.click();
     await this.region.locator('#cltnHistory').waitFor({ state: 'visible' });
+    await Promise.race([
+      this.collectionHistoryRows.first().waitFor({ state: 'visible' }),
+      this.region.locator('#blankMsg_cltnHistoryGrid').waitFor({ state: 'visible' })
+    ]);
   }
 
   async closeDetails() {
