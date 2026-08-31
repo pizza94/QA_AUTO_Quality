@@ -9,6 +9,6 @@
 - Keep failure logs under `logs/test-errors/`; do not commit generated `.log` files.
 - Record meaningful work in `docs/work-log/YYYY-MM-DD.md` using the Asia/Seoul date.
 - Keep each QualityStream menu under `tests/modules/<menu>/` with separate page, flow, and spec responsibilities.
-- Store non-secret TC input and expected values under `test-data/<menu>/`; keep URLs and credentials in environment variables.
+- Store non-secret TC input and expected values as YAML under `test-data/<menu>/`; YAML credential fields must reference environment-variable names and never contain plaintext credentials.
 - For live UI demonstrations, operate the visible browser without generating chat screenshots unless explicitly requested.
 - Update `docs/CODEX_CONTEXT.md` after meaningful decisions or blockers.
