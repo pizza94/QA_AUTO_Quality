@@ -18,12 +18,21 @@ export async function verifyConfiguredColumnsInAnalysis(
   const columnAnalysisPage = new ColumnAnalysisPage(page);
   await columnAnalysisPage.open();
   await columnAnalysisPage.search(input, target);
-  const results = await columnAnalysisPage.results();
-  const targetResults = results.filter((result) => result.tableId === target.tableId);
+  let effectiveExecutionHistory = input.executionHistory;
+  let results = await columnAnalysisPage.results();
+  let targetResults = results.filter((result) => result.tableId === target.tableId);
+
+  if (!targetResults.length && input.executionHistory === 'N') {
+    effectiveExecutionHistory = 'Y';
+    await columnAnalysisPage.search({ ...input, executionHistory: 'Y' }, target);
+    results = await columnAnalysisPage.results();
+    targetResults = results.filter((result) => result.tableId === target.tableId);
+  }
 
   if (!targetResults.length) throw new Error(`컬럼분석 조회 결과가 없습니다: ${target.tableId}`);
   const invalid = targetResults.find((result) =>
-    (input.executionHistory === 'N' && (result.executedAt !== '' || result.jobStatus !== ''))
+    (effectiveExecutionHistory === 'N' && (result.executedAt !== '' || result.jobStatus !== ''))
+    || (effectiveExecutionHistory === 'Y' && result.executedAt === '' && result.jobStatus === '')
     || result.collectionTarget !== input.collectionTarget
     || result.system !== input.system
     || result.business !== input.business
@@ -41,7 +50,12 @@ export async function verifyConfiguredColumnsInAnalysis(
   await columnAnalysisPage.selectColumns(expectedIds);
   const executionMessage = await columnAnalysisPage.runSelectedColumns();
 
-  return { columnAnalysisPage, results: targetResults, executionMessage };
+  return {
+    columnAnalysisPage,
+    results: targetResults,
+    executionMessage,
+    effectiveExecutionHistory
+  };
 }
 
 export async function applyMappingRulesAndRerun(

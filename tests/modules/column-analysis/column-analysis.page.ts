@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import type {
   ProfilingColumnTarget,
   ProfilingTarget
@@ -96,9 +96,28 @@ export class ColumnAnalysisPage {
     await this.region.locator('input[name="table.dbName"]').fill(input.database);
     await this.region.locator('input[name="table.owner"]').fill(input.owner);
     await this.searchButton.click();
-    await this.region.locator('#columnAnalysisColumnsGrid .slick-cell.l11.r11').filter({
-      hasText: new RegExp(`^${escapeRegExp(target.tableId)}$`)
-    }).first().waitFor({ state: 'visible' });
+    await expect.poll(async () => {
+      if (await this.region.locator('#blankMsg_columnAnalysisColumnsGrid').isVisible()) {
+        return 'empty';
+      }
+      const targetRows = (await this.results()).filter((result) => result.tableId === target.tableId);
+      if (!targetRows.length) return 'loading';
+      if (input.executionHistory === 'N') {
+        return targetRows.every((result) => result.executedAt === '' && result.jobStatus === '')
+          ? 'ready'
+          : 'loading';
+      }
+      if (input.executionHistory === 'Y') {
+        return targetRows.every((result) => result.executedAt !== '' || result.jobStatus !== '')
+          ? 'ready'
+          : 'loading';
+      }
+      return 'ready';
+    }, {
+      timeout: 15000,
+      intervals: [100, 250, 500],
+      message: `컬럼분석 검색 결과가 갱신되지 않았습니다: ${target.tableId}`
+    }).not.toBe('loading');
   }
 
   async results(): Promise<ColumnAnalysisResult[]> {

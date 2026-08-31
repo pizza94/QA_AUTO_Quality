@@ -67,6 +67,10 @@ invariants:
 
   - TC-009 registers an incrementally named Column profiling inspection job using the TC-006 table ID, then returns to inspection work management and verifies it by exact job-name search.
 
+  - Column-analysis searches must wait until rows match the requested execution-history state or the scoped empty-result message is visible; a matching table ID alone does not prove the SlickGrid refresh completed.
+
+  - TC-007 searches N first and falls back to Y for the same TC-006 column IDs when a rerun has no unexecuted rows.
+
 versionPolicy:
   source: package.json
   history: CHANGELOG.md, Git 커밋 및 vX.Y.Z 검증 태그
