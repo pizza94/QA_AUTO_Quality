@@ -81,6 +81,8 @@ invariants:
 
   - TC-010 immediately executes the TC-009 job, refreshes the scoped execution list every 10 seconds until the exact job has a new start time, end time, and 100% progress, then verifies completed monitoring rows for every TC-006 column ID.
 
+  - TC-010 monitoring verification waits until the exact expected TC-006 column ID set is loaded, rather than treating the visible monitoring grid container as data readiness.
+
 versionPolicy:
   source: package.json
   history: CHANGELOG.md, Git 커밋 및 vX.Y.Z 검증 태그

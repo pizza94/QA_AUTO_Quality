@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import type { ProfilingColumnTarget, ProfilingTarget } from '../profiling-settings/profiling-settings.page';
 import { JobExecutionPage, type JobExecutionInput } from './job-execution.page';
 
@@ -16,10 +16,20 @@ export async function executeAndVerifyInspectionJob(
   const message = await executionPage.runImmediately(jobName);
   const status = await executionPage.waitForCompletion(input, jobName, executionStartedAt);
   await executionPage.openMonitoring(jobName);
+  const expectedIds = [...new Set(expectedColumns.map((column) => column.columnId))].sort();
+  await expect.poll(async () => {
+    const loaded = (await executionPage.monitoringResults()).filter(
+      (result) => result.tableId === target.tableId
+    );
+    return [...new Set(loaded.map((result) => result.columnId))].sort();
+  }, {
+    timeout: 15000,
+    intervals: [100, 250, 500],
+    message: `TC-010 모니터링 컬럼 결과가 로드되지 않았습니다: ${target.tableId}`
+  }).toEqual(expectedIds);
   const results = (await executionPage.monitoringResults()).filter(
     (result) => result.tableId === target.tableId
   );
-  const expectedIds = [...new Set(expectedColumns.map((column) => column.columnId))].sort();
   const actualIds = [...new Set(results.map((result) => result.columnId))].sort();
   if (JSON.stringify(actualIds) !== JSON.stringify(expectedIds)) {
     throw new Error(`TC-010 모니터링 컬럼ID 불일치. expected=${expectedIds.join(',')} actual=${actualIds.join(',')}`);
