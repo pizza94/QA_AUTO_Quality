@@ -1,0 +1,6 @@
+input:
+  jobType: 프로파일링
+  completedStatus: 완료
+  completedProgress: 100%
+  completionTimeoutMs: 300000
+  uiPollIntervalMs: 10000

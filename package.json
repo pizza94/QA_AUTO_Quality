@@ -14,6 +14,7 @@
     "test:column-analysis": "playwright test tests/modules/column-analysis/column-analysis.spec.ts --project=chromium --workers=1",
     "test:column-mapping-rule": "playwright test tests/modules/column-analysis/column-analysis-mapping-rule.spec.ts --project=chromium --workers=1",
     "test:inspection-work": "playwright test tests/modules/inspection-work/inspection-work.spec.ts --project=chromium --workers=1",
+    "test:job-execution": "playwright test tests/modules/job-execution/job-execution.spec.ts --project=chromium --workers=1",
     "check:tc-sync": "node scripts/check-tc-sync.cjs",
     "preflight": "node scripts/preflight.cjs",
     "test:procedure": "npm run preflight && playwright test tests/procedures/full-quality-procedure.spec.ts --project=chromium --workers=1",

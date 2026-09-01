@@ -72,7 +72,7 @@ export class InspectionWorkPage {
     ]);
   }
 
-  async nextJobName(input: InspectionWorkInput) {
+  private async searchNumberedJobs(input: InspectionWorkInput) {
     await this.manageRegion.locator('#jobClassification').selectOption({ label: input.jobType });
     await this.manageRegion.locator('input[name="name"]').fill(input.jobNamePrefix);
     const searchResponse = this.page.waitForResponse((response) => {
@@ -84,19 +84,38 @@ export class InspectionWorkPage {
     await this.searchButton.click();
     await searchResponse;
     await this.waitForManageResults();
+  }
 
-    const prefix = input.jobNamePrefix;
+  private async numberedJobNames(prefix: string) {
     const matcher = new RegExp(`^${escapeRegExp(prefix)}(\\d+)$`);
     const names = await this.jobNameCells.allTextContents();
-    const max = names.reduce((current, name) => {
+    return names.flatMap((name) => {
       const match = name.trim().match(matcher);
-      return match ? Math.max(current, Number(match[1])) : current;
-    }, 0);
+      return match ? [{ name: name.trim(), suffix: Number(match[1]) }] : [];
+    });
+  }
+
+  async nextJobName(input: InspectionWorkInput) {
+    await this.searchNumberedJobs(input);
+    const names = await this.numberedJobNames(input.jobNamePrefix);
+    const max = names.reduce((current, item) => Math.max(current, item.suffix), 0);
+    const prefix = input.jobNamePrefix;
     const nextName = `${prefix}${max + 1}`;
-    if (names.some((name) => name.trim() === nextName)) {
+    if (names.some((item) => item.name === nextName)) {
       throw new Error(`점검작업명이 이미 존재합니다: ${nextName}`);
     }
     return nextName;
+  }
+
+  async latestJobName(input: InspectionWorkInput) {
+    await this.searchNumberedJobs(input);
+    const names = await this.numberedJobNames(input.jobNamePrefix);
+    const latest = names.reduce<(typeof names)[number] | undefined>(
+      (current, item) => (!current || item.suffix > current.suffix ? item : current),
+      undefined
+    );
+    if (!latest) throw new Error(`등록된 점검작업이 없습니다: ${input.jobNamePrefix}`);
+    return latest.name;
   }
 
   async openProfilingRegistration() {

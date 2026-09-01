@@ -28,6 +28,8 @@ import type {
 } from '../modules/column-analysis/column-analysis.page';
 import { registerProfilingInspectionWork } from '../modules/inspection-work/inspection-work.flow';
 import type { InspectionWorkInput } from '../modules/inspection-work/inspection-work.page';
+import { executeAndVerifyInspectionJob } from '../modules/job-execution/job-execution.flow';
+import type { JobExecutionInput } from '../modules/job-execution/job-execution.page';
 
 type LoginData = {
   credentials: LoginEnvironmentReferences;
@@ -63,11 +65,13 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
   const inspectionWorkData = await loadTestData<{ input: InspectionWorkInput }>(
     'inspection-work.yml'
   );
+  const jobExecutionData = await loadTestData<{ input: JobExecutionInput }>('job-execution.yml');
 
   test.skip(!hasLoginEnvironment(loginData.credentials), '로그인 환경변수가 설정되지 않았습니다.');
   test.setTimeout(
     collectionData.immediateExecution.completionTimeoutMs
     + (columnAnalysisData.execution.completionTimeoutMs * 2)
+    + jobExecutionData.input.completionTimeoutMs
     + 180000
   );
 
@@ -183,6 +187,7 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
     expect(applied).toHaveLength(profilingColumns.length);
   });
 
+  let inspectionJobName = '';
   await test.step('TC-009 프로파일링 점검작업 등록 및 조회', async () => {
     if (!profilingTarget) throw new Error('TC-006 프로파일링 대상 정보가 없습니다.');
     const { workPage, jobName } = await registerProfilingInspectionWork(
@@ -190,6 +195,22 @@ test('전체 QualityStream TC를 하나의 세션에서 순서대로 수행한�
       inspectionWorkData.input,
       profilingTarget
     );
+    inspectionJobName = jobName;
     await expect(workPage.jobRow(jobName)).toContainText(jobName);
+  });
+
+  await test.step('TC-010 프로파일링 점검작업 즉시실행 및 모니터링', async () => {
+    if (!inspectionJobName || !profilingTarget || !profilingColumns.length) {
+      throw new Error('TC-009 작업명 또는 TC-006 대상 컬럼 정보가 없습니다.');
+    }
+    const { status, results } = await executeAndVerifyInspectionJob(
+      page,
+      jobExecutionData.input,
+      inspectionJobName,
+      profilingTarget,
+      profilingColumns
+    );
+    expect(status.progress).toBe(jobExecutionData.input.completedProgress);
+    expect(results).toHaveLength(profilingColumns.length);
   });
 });

@@ -5,8 +5,8 @@ purpose: 대화 기억 없이 이 파일과 연결된 원본만으로 장기간 
 
 currentState:
   branch: main
-  completedTc: TC-001 ~ TC-009
-  implementedTc: TC-001 ~ TC-009
+  completedTc: TC-001 ~ TC-010
+  implementedTc: TC-001 ~ TC-010
   executionMode: 하나의 브라우저 페이지와 세션을 사용하는 순차 절차
   nextAction: TC-001 ~ TC-007 전체 절차 재검증
 
@@ -78,6 +78,8 @@ invariants:
   - TC-009 explicitly searches profiling jobs by prefix before registration and uses only the absent name whose numeric suffix is max plus one.
 
   - Column-analysis grid state is evaluated only after the search response whose request contains the target table ID has completed, preventing stale empty-state reads during N-to-Y transitions.
+
+  - TC-010 immediately executes the TC-009 job, refreshes the scoped execution list every 10 seconds until the exact job has a new start time, end time, and 100% progress, then verifies completed monitoring rows for every TC-006 column ID.
 
 versionPolicy:
   source: package.json
